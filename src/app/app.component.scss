@@ -117,3 +117,23 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que ocupe toda la altura */
+  width: 100%;
+}
+
+app-header {
+  position: sticky; /* Fijo en la parte superior */
+  top: 0;
+  z-index: 10; /* Para que esté sobre el contenido */
+  width: 100%;
+}
+
+ion-router-outlet {
+  flex: 1; /* Para que el contenido ocupe el resto del espacio */
+  position: relative;
+  display: block;
+}

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -6,8 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent  implements OnInit {
-  title: string;
-  constructor() { }
-  ngOnInit() {}
 
+  @Input() title!:string;
+
+  themeService = inject(ThemeService)
+  constructor() { }
+  ngOnInit() {
+    this.themeService.loadTheme();
+  }
+
+  toggleTheme(event: any){
+    this.themeService.setTheme(event.detail.checked)
+  }
 }

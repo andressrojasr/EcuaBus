@@ -1,9 +1,18 @@
-<ion-header class="ion-no-border" >
-  <ion-toolbar color="primary">
-    <ion-title>
-      <strong>{{title}}</strong> 
-      <div class="admin">FreshHabner</div>
+<ion-header class="ion-no-border" [translucent]="true">
+  <ion-toolbar color="undefined">
+    <ion-title *ngIf="title">
+      <ion-item lines="none" class="header-item">
+        <ion-avatar aria-hidden="true" slot="start">
+          <img alt="Logotipo Cooperativa" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ion-avatar> 
+        <ion-label class="header-label">{{title}}</ion-label>
+      </ion-item>
     </ion-title>
-    <ion-toggle></ion-toggle>
+    <ion-buttons slot="start" *ngIf="title">
+      <ion-menu-button color="primary"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-toggle (ionChange)="toggleTheme($event)"></ion-toggle>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
