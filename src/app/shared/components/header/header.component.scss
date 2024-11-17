@@ -1,0 +1,8 @@
+ion-toggle{
+    --track-background: #F6BA67;
+    --track-background-checked: #FFFFFF;
+    --handle-background-checked: #F6BA67;
+}
+ion-toggle::part(track){
+    width: 90px;
+}
