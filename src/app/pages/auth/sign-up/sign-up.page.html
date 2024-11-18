@@ -1,13 +1,193 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>signUp</ion-title>
-  </ion-toolbar>
-</ion-header>
-
+<app-header [back]="true"></app-header>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signUp</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid class="full-height">
+    <ion-row class="full-height first">
+      <!-- Columna izquierda -->
+      <ion-col size="6" sizeSm="12" sizeMd="12" sizeXs="12" sizeLg="6" class="d-flex-center">
+        <div class="d-flex-center logo">
+          <ion-img src="assets/icon/logo3.png" alt="Logotipo EcuaBus" size="large"></ion-img>
+          <ion-label class="logo-label">Administrador</ion-label>
+          <ion-label class="logo-label">EcuaBus</ion-label>
+        </div>
+      </ion-col>
+      <!-- Columna derecha -->
+      <ion-col size="6" sizeSm="12" sizeMd="12" sizeXs="12" sizeLg="6" class="d-flex-center">
+        <div class="d-flex-center">
+          <form 
+            class="auth-form"
+            (ngSubmit)="submit()"
+            [formGroup]="userForm && cooperativeForm"
+            (keypress.enter)="submit()">
+            <ion-label class="form-title">Registrarse EcuaBus</ion-label>
+            <!-- Input de nombre -->
+            <app-custom-input 
+              icon="person" 
+              type="text" 
+              label="Nombre" 
+              autocomplete="name" 
+              [control]="userForm.controls.name">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.name.errors && userForm.controls.name.touched">
+              <div *ngIf="userForm.controls.name.errors?.['required']">El nombre es requerido</div>
+              <div *ngIf="userForm.controls.name.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
+            </div>
+            <!-- Input de apellido -->
+            <app-custom-input 
+              icon="person-add" 
+              type="text" 
+              label="Apellido" 
+              autocomplete="lastName" 
+              [control]="userForm.controls.lastName">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.lastName.errors && userForm.controls.lastName.touched">
+              <div *ngIf="userForm.controls.lastName.errors?.['required']">El apellido es requerido</div>
+              <div *ngIf="userForm.controls.lastName.errors?.['minlength']">El apellido debe tener al menos 2 caracteres</div>
+            </div>
+            <!-- Input de cedula -->
+            <app-custom-input 
+              icon="card" 
+              type="text" 
+              label="Cédula" 
+              autocomplete="card" 
+              [control]="userForm.controls.card">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.card.errors && userForm.controls.card.touched">
+              <div *ngIf="userForm.controls.card.errors?.['required']">La cédula es requerida</div>
+              <div *ngIf="userForm.controls.card.errors?.['minlength']">La cédula debe tener 10 caracteres</div>
+              <div *ngIf="userForm.controls.card.errors?.['maxlength']">La cédula debe tener 10 caracteres</div>
+            </div>
+            <!-- Input de celular -->
+            <app-custom-input 
+              icon="phone-portrait" 
+              type="text" 
+              label="Celular" 
+              autocomplete="phone" 
+              [control]="userForm.controls.phone">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.phone.errors && userForm.controls.phone.touched">
+              <div *ngIf="userForm.controls.phone.errors?.['required']">El celular es requerido</div>
+              <div *ngIf="userForm.controls.phone.errors?.['minlength']">El celular debe tener 10 caracteres</div>
+              <div *ngIf="userForm.controls.phone.errors?.['maxlength']">El celular debe tener 10 caracteres</div>
+            </div>
+            <!-- Input de correo -->
+            <app-custom-input 
+              icon="mail" 
+              type="email" 
+              label="Correo" 
+              autocomplete="email" 
+              [control]="userForm.controls.email">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.email.errors && userForm.controls.email.touched">
+              <div *ngIf="userForm.controls.email.errors?.['required']">El correo es requerido</div>
+              <div *ngIf="userForm.controls.email.errors?.['email']">Ingrese un correo válido</div>
+            </div>
+            <!-- Input de cooperativa -->
+            <app-custom-input 
+              icon="business" 
+              type="text" 
+              label="Nombre de cooperativa" 
+              autocomplete="nameCoop" 
+              [control]="cooperativeForm.controls.name">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="cooperativeForm.controls.name.errors && cooperativeForm.controls.name.touched">
+              <div *ngIf="cooperativeForm.controls.name.errors?.['required']">EL nombre de cooperativa es requerido</div>
+              <div *ngIf="cooperativeForm.controls.name.errors?.['minlength']">El nombre de cooperativa debe tener al menos 5 caracteres</div>
+            </div>
+            <!-- Input de direccion cooperativa -->
+            <app-custom-input 
+              icon="pin" 
+              type="text" 
+              label="Dirección de cooperativa" 
+              autocomplete="addressCoop" 
+              [control]="cooperativeForm.controls.address">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="cooperativeForm.controls.address.errors && cooperativeForm.controls.address.touched">
+              <div *ngIf="cooperativeForm.controls.address.errors?.['required']">La dirección de cooperativa es requerido</div>
+              <div *ngIf="cooperativeForm.controls.address.errors?.['minlength']">La dirección de cooperativa debe tener al menos 5 caracteres</div>
+            </div>
+            <!-- Input de celular cooperativa -->
+            <app-custom-input 
+              icon="call" 
+              type="text" 
+              label="Teléfono de cooperativa" 
+              autocomplete="phoneCoop" 
+              [control]="cooperativeForm.controls.phone">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="cooperativeForm.controls.phone.errors && cooperativeForm.controls.phone.touched">
+              <div *ngIf="cooperativeForm.controls.phone.errors?.['required']">El teléfono de cooperativa es requerido</div>
+              <div *ngIf="cooperativeForm.controls.phone.errors?.['minlength']">El teléfono de cooperativa debe tener 10 caracteres</div>
+              <div *ngIf="cooperativeForm.controls.phone.errors?.['maxlength']">El teléfono de cooperativa debe tener 10 caracteres</div>
+            </div>
+            <!-- Input de ruc cooperativa -->
+            <app-custom-input 
+              icon="keypad" 
+              type="text" 
+              label="Ruc de cooperativa" 
+              autocomplete="rucCoop" 
+              [control]="cooperativeForm.controls.ruc">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="cooperativeForm.controls.phone.errors && cooperativeForm.controls.ruc.touched">
+              <div *ngIf="cooperativeForm.controls.ruc.errors?.['required']">El ruc de cooperativa es requerido</div>
+              <div *ngIf="cooperativeForm.controls.ruc.errors?.['minlength']">El ruc de cooperativa debe tener 13 caracteres</div>
+              <div *ngIf="cooperativeForm.controls.ruc.errors?.['maxlength']">El ruc de cooperativa debe tener 13 caracteres</div>
+            </div>
+            <!-- Input de correo cooperativa-->
+            <app-custom-input 
+              icon="mail" 
+              type="email" 
+              label="Correo de cooperativa" 
+              autocomplete="email" 
+              [control]="cooperativeForm.controls.email">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="cooperativeForm.controls.email.errors && cooperativeForm.controls.email.touched">
+              <div *ngIf="cooperativeForm.controls.email.errors?.['required']">El correo de cooperativa es requerido</div>
+              <div *ngIf="cooperativeForm.controls.email.errors?.['email']">Ingrese un correo válido</div>
+            </div>
+            <!-- Input de contraseña -->
+            <app-custom-input 
+              icon="key" 
+              type="password" 
+              label="Contraseña" 
+              [control]="userForm.controls.password">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="userForm.controls.password.errors && userForm.controls.password.touched">
+              <div *ngIf="userForm.controls.password.errors?.['required']">La contraseña es requerida</div>
+              <div *ngIf="userForm.controls.password.errors?.['minlength']">Ingrese al menos 6 caracteres</div>
+            </div>
+            <ion-button 
+              type="submit"
+              expand="block" 
+              mode="ios"
+              shape="round"
+              class="submit"
+              [disabled]="userForm.invalid || cooperativeForm.invalid">
+              REGISTRARSE
+            </ion-button> 
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
