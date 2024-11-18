@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
@@ -9,6 +10,9 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class HeaderComponent  implements OnInit {
 
   @Input() title!:string;
+  @Input() back!: boolean;
+
+  navCtrl = inject(NavController)
 
   themeService = inject(ThemeService)
   constructor() { }
@@ -18,5 +22,8 @@ export class HeaderComponent  implements OnInit {
 
   toggleTheme(event: any){
     this.themeService.setTheme(event.detail.checked)
+  }
+  goBack(){
+    this.navCtrl.back()
   }
 }
