@@ -91,3 +91,9 @@
 	--ion-text-color: #ffffff;
 	/* Añade más variables si es necesario */
   }
+
+  [data-theme='dark'] .custom-input {
+    --ion-background-color: #FFFFFF; /* Fondo blanco */
+    --ion-text-color: #000000; /* Texto negro */
+    --border-color: #A09FAB; /* Color del borde */
+}
