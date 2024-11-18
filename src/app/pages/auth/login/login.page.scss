@@ -1,0 +1,71 @@
+.full-height {
+    height: 100%; /* Asegura que las filas y columnas ocupen toda la altura */
+  }
+
+
+    ion-img {
+    width: 80%;
+    max-width: 483px; /* Tamaño del logo */
+  }
+  
+  .logo-label {
+    font-size: 3rem;
+    color: var(--ion-color-primary);
+    font-weight: bold;
+  }
+  
+  .form-title {
+    font-size: 2rem; /* Título principal */
+    color: var(--ion-text-color);
+    padding-top: 10px;
+    text-align: left;
+    font-weight: bold;
+    position: relative;
+    margin-left: -30%;
+  }
+
+  .form-title::before {
+    content: ""; /* Crea un pseudo-elemento vacío */
+    position: absolute;
+    top: 0; /* Coloca la línea justo encima del texto */
+    left: 0;
+    width: 60%; /* Asegura que la línea ocupe todo el ancho del label */
+    height: 3px; /* Altura de la línea */
+    background-color: orange; /* Color de la línea */
+  }
+
+  .forget-password {
+    font-size: 1rem; /* Título principal */
+    color: var(--ion-text-color);
+    padding-top: 10px;
+    text-align: right;
+    align-items: end;
+    margin-left: 55%;
+  }
+
+  .footer{
+    padding-top: 150px;
+  }
+
+  @media (max-width: 768px) {
+    .form-title {
+      font-size: 1rem;
+    }
+
+    .forget-password{
+        font-size: 0.6rem;
+    }
+
+    .first{
+        height: 60%;
+    }
+
+    ion-img {
+        width: 50%;
+        min-width: 200px; /* Tamaño del logo */
+      }
+      
+      .logo-label {
+        font-size: 1rem;
+      }
+  }
