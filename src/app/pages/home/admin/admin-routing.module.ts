@@ -8,12 +8,12 @@ const routes: Routes = [
     path: '',
     component: AdminPage
   },  {
-    path: 'cooperativas',
-    loadChildren: () => import('./cooperativas/cooperativas.module').then( m => m.CooperativasPageModule)
+    path: 'bus',
+    loadChildren: () => import('./bus/bus.module').then( m => m.BusPageModule)
   },
   {
-    path: 'admin-cooperativas',
-    loadChildren: () => import('./admin-cooperativas/admin-cooperativas.module').then( m => m.AdminCooperativasPageModule)
+    path: 'partners',
+    loadChildren: () => import('./partners/partners.module').then( m => m.PartnersPageModule)
   }
 
 ];

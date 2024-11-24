@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { HomePage } from './home.page';
+import { AdminPage } from './admin/admin.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomePage
+    component: AdminPage
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('../folder/folder.module').then( m => m.FolderPageModule)
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
   },
+
 ];
 
 @NgModule({

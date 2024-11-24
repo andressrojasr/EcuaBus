@@ -47,7 +47,7 @@ export class LoginPage implements AfterViewInit {
       let path = `users/${uid}`;
       this.firebase.getDocument(path).then((user: any) => {
         this.utils.saveInLocalStorage('user', user);
-        this.utils.routerLink('/home');
+        if(user.rol==="Administrador") this.utils.routerLink('home/admin/bus');
         this.form.reset();
         this.utils.showToast({
           message: `Te damos la bienvenida ${user.name}`,

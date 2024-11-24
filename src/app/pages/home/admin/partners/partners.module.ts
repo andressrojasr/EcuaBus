@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CooperativasPageRoutingModule } from './cooperativas-routing.module';
+import { PartnersPageRoutingModule } from './partners-routing.module';
 
-import { CooperativasPage } from './cooperativas.page';
+import { PartnersPage } from './partners.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CooperativasPageRoutingModule
+    PartnersPageRoutingModule
   ],
-  declarations: [CooperativasPage]
+  declarations: [PartnersPage]
 })
-export class CooperativasPageModule {}
+export class PartnersPageModule {}

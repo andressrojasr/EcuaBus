@@ -4,19 +4,19 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FolderPageRoutingModule } from './folder-routing.module';
+import { CreateBusPageRoutingModule } from './create-bus-routing.module';
 
-import { FolderPage } from './folder.page';
-import { SharedModule } from '../../shared/shared.module';
+import { CreateBusPage } from './create-bus.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FolderPageRoutingModule,
+    CreateBusPageRoutingModule,
     SharedModule
   ],
-  declarations: [FolderPage]
+  declarations: [CreateBusPage]
 })
-export class FolderPageModule {}
+export class CreateBusPageModule {}

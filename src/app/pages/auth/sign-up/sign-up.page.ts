@@ -38,7 +38,8 @@ export class SignUpPage implements OnInit {
     ruc: new FormControl('', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     photo: new FormControl(''),
-    isBlocked: new FormControl(false)
+    isBlocked: new FormControl(false),
+    rol: new FormControl('Administrador')
   })
 
   async submit (){
