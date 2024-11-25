@@ -27,7 +27,8 @@ export class SignUpPage implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     isBlocked: new FormControl(false),
     photo: new FormControl(''),
-    uidCooperative: new FormControl('')
+    uidCooperative: new FormControl(''),
+    rol: new FormControl('Administrador')
   })
 
   cooperativeForm = new FormGroup({
@@ -38,7 +39,7 @@ export class SignUpPage implements OnInit {
     ruc: new FormControl('', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     photo: new FormControl(''),
-    isBlocked: new FormControl(false)
+    isBlocked: new FormControl(false),
   })
 
   async submit (){
@@ -69,7 +70,7 @@ export class SignUpPage implements OnInit {
         duration:3000,
         icon:'checkmark-circle-outline'
       })
-      this.utils.routerLink('/home')
+      this.utils.routerLink('/home/admin/bus')
     }).catch(err => {
       this.utils.showToast({
         message:err.message,
@@ -118,6 +119,7 @@ export class SignUpPage implements OnInit {
     delete this.userForm.value.password
     this.firebase.setDocument(path,this.userForm.value).then( async res => {
       this.utils.saveInLocalStorage('user',this.userForm.value)
+      this.utils.saveInLocalStorage('cooperative', this.cooperativeForm.value)
     }).catch(err => {
       this.utils.showToast({
         message:err.message,

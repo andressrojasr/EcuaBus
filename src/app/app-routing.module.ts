@@ -8,10 +8,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'admin',
-    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule)
-  },
-  {
     path: 'auth',
     loadChildren: () => import('./pages/auth/auth.module').then( m => m.AuthPageModule)
   },

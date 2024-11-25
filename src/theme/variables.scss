@@ -99,3 +99,15 @@
     --ion-text-color: #000000; /* Texto negro */
     --border-color: #A09FAB; /* Color del borde */
 }
+
+[data-theme='dark'] .product-item ion-card {
+    --ion-background-color: #FFFFFF; /* Fondo blanco */
+    --ion-text-color: #000000; /* Texto negro */
+    --border-color: #A09FAB; /* Color del borde */
+}
+
+[data-theme='dark'] ion-searchbar {
+    --background: #FFFFFF; /* Fondo blanco */
+    --ion-text-color: #000000; /* Texto negro */
+    --border-color: #A09FAB; /* Color del borde */
+}

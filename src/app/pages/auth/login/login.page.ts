@@ -47,7 +47,8 @@ export class LoginPage implements AfterViewInit {
       let path = `users/${uid}`;
       this.firebase.getDocument(path).then((user: any) => {
         this.utils.saveInLocalStorage('user', user);
-        this.utils.routerLink('/home');
+        this.getCooperativeInfo(user.uidCooperative)
+        if(user.rol==="Administrador") this.utils.routerLink('home/admin/bus');
         this.form.reset();
         this.utils.showToast({
           message: `Te damos la bienvenida ${user.name}`,
@@ -56,6 +57,27 @@ export class LoginPage implements AfterViewInit {
           position: 'middle',
           icon: 'person-circle-outline'
         })
+      }).catch(error => { 
+        this.utils.showToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+      }).finally(() => {
+        loading.dismiss();
+      })
+    }
+  }
+
+  async getCooperativeInfo(uid: string) {
+    if (this.form.valid) {
+      const loading = await this.utils.loading();
+      await loading.present();
+      let path = `cooperatives/${uid}`;
+      this.firebase.getDocument(path).then((cooperative: any) => {
+        this.utils.saveInLocalStorage('cooperative', cooperative);
       }).catch(error => { 
         this.utils.showToast({
           message: error.message,
