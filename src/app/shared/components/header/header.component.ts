@@ -1,5 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Cooperative } from 'src/app/models/cooperative.model';
 import { User } from 'src/app/models/user.model';
 import { ThemeService } from 'src/app/services/theme.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -11,7 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class HeaderComponent  implements OnInit {
 
-  @Input() title!:string;
+  title!:string;
   @Input() back!: boolean;
 
   navCtrl = inject(NavController)
@@ -21,8 +22,9 @@ export class HeaderComponent  implements OnInit {
   theme: string;
   constructor() { }
   user: User = this.utils.getFromLocalStorage('user');
-  
+  cooperative: Cooperative = this.utils.getFromLocalStorage('cooperative')
   ngOnInit() {
+    if(this.cooperative) this.title=this.cooperative.name;
     this.theme =localStorage.getItem('theme') 
     this.themeService.loadTheme();
   }

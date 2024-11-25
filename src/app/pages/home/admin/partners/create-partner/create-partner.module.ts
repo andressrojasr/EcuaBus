@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateBusPageRoutingModule } from './create-bus-routing.module';
+import { CreatePartnerPageRoutingModule } from './create-partner-routing.module';
 
-import { CreateBusPage } from './create-bus.page';
+import { CreatePartnerPage } from './create-partner.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,11 +14,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    CreateBusPageRoutingModule,
+    CreatePartnerPageRoutingModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [CreateBusPage]
+  declarations: [CreatePartnerPage]
 })
-export class CreateBusPageModule {}
+export class CreatePartnerPageModule {}

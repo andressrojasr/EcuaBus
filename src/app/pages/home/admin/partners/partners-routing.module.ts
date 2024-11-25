@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: PartnersPage
+  },  {
+    path: 'create-partner',
+    loadChildren: () => import('./create-partner/create-partner.module').then( m => m.CreatePartnerPageModule)
   }
+
 ];
 
 @NgModule({

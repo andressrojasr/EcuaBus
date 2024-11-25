@@ -66,10 +66,7 @@ export class UtilsService {
       resultType:CameraResultType.DataUrl,
       quality:90,
       allowEditing:true,
-      source:CameraSource.Prompt,
-      promptLabelHeader,
-      promptLabelPhoto:'Selecciona una imagen',
-      promptLabelPicture:'Toma una foto'
+      source:CameraSource.Photos,
     })
   }
 }
