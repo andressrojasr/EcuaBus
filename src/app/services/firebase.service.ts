@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  deleteUser,
+  signOut,
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'
@@ -45,6 +45,10 @@ export class FirebaseService {
   signIn(user: User)
   {
     return signInWithEmailAndPassword(getAuth(),user.email, user.password)
+  }
+
+  signOut(){
+    return signOut(getAuth())
   }
 
   signUp(user:User)

@@ -1,15 +1,15 @@
 <ion-header class="ion-no-border" [translucent]="true">
   <ion-toolbar color="undefined">
-    <ion-title *ngIf="cooperative">
+    <ion-title *ngIf="showTitle && user!==null && cooperative!==null ">
       <ion-item lines="none" class="header-item">
         <ion-avatar aria-hidden="true" slot="start">
           <img alt="Logotipo Cooperativa" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
         </ion-avatar> 
-        <ion-label class="header-label">{{title}} - {{this.user.rol}}</ion-label>
+        <ion-label class="header-label" >{{cooperative.name}} - {{user.rol}}</ion-label>
       </ion-item>
     </ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button *ngIf="title" color="primary"></ion-menu-button>
+      <ion-menu-button *ngIf="showTitle" color="primary"></ion-menu-button>
       <ion-button *ngIf="back" (click)="goBack()">
         <ion-icon slot="icon-only" name="arrow-back" color="primary"></ion-icon>
       </ion-button>

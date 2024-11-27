@@ -1,4 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Cooperative } from 'src/app/models/cooperative.model';
 import { User } from 'src/app/models/user.model';
@@ -12,21 +13,27 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class HeaderComponent  implements OnInit {
 
-  title!:string;
   @Input() back!: boolean;
 
   navCtrl = inject(NavController)
   themeService = inject(ThemeService)
   utils = inject(UtilsService)
+  router = inject(Router)
+  showTitle = true;
 
   theme: string;
   constructor() { }
-  user: User = this.utils.getFromLocalStorage('user');
-  cooperative: Cooperative = this.utils.getFromLocalStorage('cooperative')
+  user: User;
+  cooperative: Cooperative;
   ngOnInit() {
-    if(this.cooperative) this.title=this.cooperative.name;
+    this.user = this.utils.getFromLocalStorage('user');
+    this.cooperative = this.utils.getFromLocalStorage('cooperative')
     this.theme =localStorage.getItem('theme') 
     this.themeService.loadTheme();
+    this.router.events.subscribe(() => {
+      const currentUrl = this.router.url;
+      this.showTitle = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up'));
+    });
   }
 
   toggleTheme(event: any){

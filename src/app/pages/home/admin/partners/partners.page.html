@@ -2,7 +2,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-item lines="none">
-    <ion-label>
+    <ion-label class="navigation">
       Socios
     </ion-label>
   </ion-item>
@@ -17,24 +17,24 @@
           </ion-card-header>
 
           <ion-card-content>
-            <ion-item lines="none">
+            <ion-item lines="none" class="item">
               <ion-thumbnail slot="start">
                 <ion-avatar aria-hidden="true" slot="start">
                   <img alt="Foto del socio" [src]="p.photo" />
                 </ion-avatar>
               </ion-thumbnail>
-              <ion-list>
+              <ion-list >
                 <ion-item>
-                  <ion-label>Número de Cédula: {{p.card}}</ion-label>
+                  <ion-label class="ion-text-wrap">Número de Cédula: {{p.card}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label>Dirección: {{p.address}}</ion-label>
+                  <ion-label class="ion-text-wrap">Dirección: {{p.address}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label>Email: {{p.email}}</ion-label>
+                  <ion-label class="ion-text-wrap">Email: {{p.email}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label>Teléfono: {{p.card}}</ion-label>
+                  <ion-label class="ion-text-wrap">Teléfono: {{p.card}}</ion-label>
                 </ion-item>
               </ion-list>
             </ion-item>
