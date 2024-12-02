@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UtilsService } from './services/utils.service';
-import { User } from 'firebase/auth';
 import { Router } from '@angular/router';
+import { User } from './models/user.model';
+import { FirebaseService } from './services/firebase.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   utils = inject(UtilsService)
+  firebase = inject(FirebaseService)
   router = inject(Router)
   showMenu=true
 
@@ -16,7 +18,7 @@ export class AppComponent implements OnInit {
   
   public appPages = [
     { title: 'Buses', url: 'home/admin/bus', icon: 'train' },
-    { title: 'Conductores', url: 'asd', icon: 'people' },
+    { title: 'Conductores', url: 'home/admin/drivers', icon: 'people' },
     { title: 'Oficinistas', url: './folder/favorites', icon: 'briefcase' },
     { title: 'Taquilleros', url: './folder/archived', icon: 'cash' },
     { title: 'Frecuencias', url: './folder/trash', icon: 'git-branch' },
@@ -30,4 +32,11 @@ export class AppComponent implements OnInit {
     });
   }
   constructor() {}
+
+  logOut(){
+    this.utils.removeFromLocalStorage('user')
+    this.utils.removeFromLocalStorage('cooperative')
+    this.firebase.signOut()
+    this.utils.navigateToHome()
+  }
 }

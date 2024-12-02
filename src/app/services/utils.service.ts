@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { AlertController, AlertOptions, LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
+import { AlertController, AlertOptions, LoadingController, ModalController, ModalOptions, NavController, ToastController, ToastOptions } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,7 @@ export class UtilsService {
   router = inject(Router)
   modalController = inject(ModalController)
   alertController = inject(AlertController)
+  nav = inject(NavController)
 
   async presentModal(opt:ModalOptions)
   {
@@ -60,6 +61,10 @@ export class UtilsService {
     return item ? JSON.parse(item) : null
   }
 
+  removeFromLocalStorage(key:string){
+    return localStorage.removeItem(key)
+  }
+
   async takePicture(promptLabelHeader:string)
   {
     return await Camera.getPhoto({
@@ -68,5 +73,9 @@ export class UtilsService {
       allowEditing:true,
       source:CameraSource.Photos,
     })
+  }
+
+  navigateToHome(){
+    this.nav.navigateRoot('/auth')
   }
 }

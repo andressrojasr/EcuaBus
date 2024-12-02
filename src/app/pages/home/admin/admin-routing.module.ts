@@ -7,13 +7,18 @@ const routes: Routes = [
   {
     path: '',
     component: AdminPage
-  },  {
+  },
+  {
     path: 'bus',
     loadChildren: () => import('./bus/bus.module').then( m => m.BusPageModule)
   },
   {
     path: 'partners',
     loadChildren: () => import('./partners/partners.module').then( m => m.PartnersPageModule)
+  },
+  {
+    path: 'drivers',
+    loadChildren: () => import('./drivers/drivers.module').then( m => m.DriversPageModule)
   }
 
 ];

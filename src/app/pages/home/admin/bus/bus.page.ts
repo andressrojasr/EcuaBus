@@ -46,11 +46,13 @@ export class BusPage{
       next: async (res: any[]) => {
         const busesWithPartners = await Promise.all(
           res.map(async (bus) => {
-            const partner: Partner= await this.getPartner(bus.idPartner);
-            return { ...bus, partner: partner || 'Sin asignar' };
+            const socio = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/partners/${bus.idPartner}`)
+            return {
+              ...bus,
+              partner: socio || {id: '', name:'', lastName:'', card: '', address: '', email: '', phone: '', photo: ''}
+            }
           })
         );
-  
         this.buses = busesWithPartners;
         this.filteredBuses = busesWithPartners;
         this.loading = false;
@@ -130,21 +132,6 @@ export class BusPage{
         );
       });
     }
-  }
-
-
-  async getPartner(id: String): Promise<Partner | null> {
-    if (!id) {
-      return null;
-    }
-    const user: User = this.utils.getFromLocalStorage('user');
-    const path = `cooperatives/${user.uidCooperative}/partners/${id}`;
-  
-    return  this.firebase.getDocument(path).then((partner: Partner)=>{
-        return partner || null
-      }).catch((error)=>{
-        return null
-      })
   }
 
   constructor() {}

@@ -3,14 +3,38 @@
     <ion-menu contentId="contenido" type="overlay" *ngIf="showMenu">
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
+          <ion-list-header>
+            <ion-item lines="none" class="header">
+                <img class="logo" alt="Logotipo EcuaBus" src="assets/icon/logo3.png"/>
+              <ion-label class="title" color="primary">Administrador<br>EcuaBus</ion-label>
+            </ion-item>
+          </ion-list-header>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item  [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-footer>
+            <ion-item lines="none">
+              <ion-avatar  class="photoUser">
+                <img alt="Logotipo EcuaBus" src="assets/icon/logo3.png"/>
+              </ion-avatar>
+            <ion-list lines="none" class="letters">
+              <ion-item>
+                <ion-label *ngIf="user!==null">{{user.name + " "+ user.lastName}} <br> {{user.email}}</ion-label>
+              </ion-item>
+                <ion-button
+                  class="logOut"
+                  mode="ios"
+                  color="danger"
+                  (click)="logOut()"
+                  >
+                  CERRAR SESIÓN
+                </ion-button>
+            </ion-list>
+          </ion-item>
+          </ion-footer>
         </ion-list>
       </ion-content>
     </ion-menu>
