@@ -1,0 +1,192 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { orderBy } from 'firebase/firestore';
+import { User } from 'src/app/models/user.model';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { UtilsService } from 'src/app/services/utils.service';
+
+@Component({
+  selector: 'app-clerks',
+  templateUrl: './clerks.page.html',
+  styleUrls: ['./clerks.page.scss'],
+})
+export class ClerksPage {
+
+  utils = inject(UtilsService)
+  firebase = inject(FirebaseService)
+  router = inject(Router)
+  clerks: User[] = []
+  filteredClerks: User[]=[]
+  searchTerm: string = '';
+  loading:boolean = false
+  isOptionActive: boolean = false;
+
+  ionViewWillEnter() {
+    this.getClerks()
+  }
+
+  doRefresh(event: any)
+  {
+    setTimeout(() => {
+      this.getClerks();
+      event.target.complete();
+    }, 1000);
+  }
+
+  
+
+  async getClerks() {
+    const user: User = this.utils.getFromLocalStorage('user');
+    let path = `cooperatives/${user.uidCooperative}/clerks`;
+    this.loading = true;
+
+    let query = [
+      orderBy('__name__', 'asc'),
+    ]
+
+    let sub = this.firebase.getCollectionData(path,query).subscribe({
+      next: (res: any) => {
+        this.clerks = res
+        this.filterByBlockedStatus();
+        this.loading = false;
+      }
+    })
+  }
+
+  async addUpdateClerk(clerk?: User)
+  {
+    this.router.navigate(['/home/admin/clerks/create-clerk'], { state: { clerk } });
+  }
+
+  confirmDeleteClerk(clerk: User) {
+    this.utils.presentAlert({
+      header: 'Bloquear oficinista',
+      message: '¿Estás seguro de bloquear a este oficinista?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Bloquear',
+          handler: () => this.deleteClerk(clerk),
+        },
+      ],
+    });
+  }
+
+  confirmUnlockClerk(clerk: User) {
+    this.utils.presentAlert({
+      header: 'Desbloquear oficinista',
+      message: '¿Estás seguro de desbloquear a este oficinista?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Desbloquear',
+          handler: () => this.unlockClerk(clerk),
+        },
+      ],
+    });
+  }
+
+  async deleteClerk(clerk: User) {
+    const user: User = this.utils.getFromLocalStorage('user');
+    clerk.isBlocked = true
+    let path = `cooperatives/${user.uidCooperative}/clerks/${clerk.uid}`;
+
+    const loading = await this.utils.loading();
+    await loading.present();
+
+    try {
+      await this.firebase.updateDocument(path, clerk);
+      this.utils.showToast({
+        message: 'Oficinista bloqueado exitosamente',
+        duration: 1500,
+        color: 'success',
+        position: 'middle',
+        icon: 'checkmark-circle-outline',
+      });
+      this.searchTerm=''
+    } catch (error) {
+      this.utils.showToast({
+        message:"Ha ocurrido un error",
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  async unlockClerk(clerk: User) {
+    const user: User = this.utils.getFromLocalStorage('user');
+    clerk.isBlocked = false
+    let path = `cooperatives/${user.uidCooperative}/clerks/${clerk.uid}`;
+
+    const loading = await this.utils.loading();
+    await loading.present();
+
+    try {
+      await this.firebase.updateDocument(path, clerk);
+      this.utils.showToast({
+        message: 'Oficinista desbloqueado exitosamente',
+        duration: 1500,
+        color: 'success',
+        position: 'middle',
+        icon: 'checkmark-circle-outline',
+      });
+      this.searchTerm=''
+    } catch (error) {
+      this.utils.showToast({
+        message:"Ha ocurrido un error",
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  filterClerks() {
+    const searchTerm = this.searchTerm.toLowerCase();
+
+    if (searchTerm.trim() === '') {
+      this.filteredClerks = this.clerks;
+    } else {
+      this.filteredClerks = this.clerks.filter(clerk => {
+        const complete = clerk.name+clerk.lastName
+        return (
+          clerk.card.toLowerCase().includes(searchTerm) ||
+          clerk.name.toLowerCase().includes(searchTerm)||
+          clerk.lastName.toLowerCase().includes(searchTerm)||
+          clerk.email.toLowerCase().includes(searchTerm)||
+          complete.toLowerCase().includes(searchTerm)
+        );
+      });
+    }
+  }
+
+  filterByBlockedStatus() {
+    this.filteredClerks = this.clerks.filter(
+        (clerk) => clerk.isBlocked === this.isOptionActive
+    );
+}
+
+  onToggleChange(event: any) {
+    this.isOptionActive = event.detail.checked; // Actualiza el valor del toggle
+    this.searchTerm=''
+    this.getClerks(); // Recarga conductores basados en el filtro
+  }
+
+  constructor() {}
+
+}
