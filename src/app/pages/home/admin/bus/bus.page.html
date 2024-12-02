@@ -28,7 +28,11 @@
                   <ion-label class="ion-text-wrap">Número de pisos: {{p.floors}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap">Dueño: {{p.partner.card + " - " + p.partner.name + " " + p.partner.lastName  || 'Sin asignar'}}</ion-label>
+                  <ion-label class="ion-text-wrap">
+                    Dueño: {{ p.partner?.card && p.partner?.name && p.partner?.lastName ? 
+                             p.partner.card + " - " + p.partner.name + " " + p.partner.lastName : 
+                             'Sin asignar' }}
+                  </ion-label>
                 </ion-item>
               </ion-list>
             </ion-item>

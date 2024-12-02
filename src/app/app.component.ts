@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   
   public appPages = [
     { title: 'Buses', url: 'home/admin/bus', icon: 'train' },
-    { title: 'Conductores', url: 'asd', icon: 'people' },
+    { title: 'Conductores', url: 'home/admin/drivers', icon: 'people' },
     { title: 'Oficinistas', url: './folder/favorites', icon: 'briefcase' },
     { title: 'Taquilleros', url: './folder/archived', icon: 'cash' },
     { title: 'Frecuencias', url: './folder/trash', icon: 'git-branch' },

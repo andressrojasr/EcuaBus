@@ -24,7 +24,6 @@ import {
 }  from '@angular/fire/firestore'
 import { AngularFireStorage } from '@angular/fire/compat/storage'
 import { UtilsService } from './utils.service';
-
 import {
   getStorage,
   uploadString,
@@ -41,7 +40,6 @@ export class FirebaseService {
   firestore = inject(AngularFirestore)
   storage = inject(AngularFireStorage)
   utilsSrv = inject(UtilsService)
-
   signIn(user: User)
   {
     return signInWithEmailAndPassword(getAuth(),user.email, user.password)
@@ -55,6 +53,8 @@ export class FirebaseService {
   {
     return createUserWithEmailAndPassword(getAuth(),user.email, user.password)
   }
+
+
 
   resetPassword(email:string){
     return sendPasswordResetEmail(getAuth(), email)
