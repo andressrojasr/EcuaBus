@@ -44,7 +44,7 @@ export class DriversPage {
       orderBy('__name__', 'asc'),
     ]
 
-    let sub = this.firebase.getCollectionData(path,query).subscribe({
+    this.firebase.getCollectionData(path,query).subscribe({
       next: (res: any) => {
         this.drivers = res
         this.filterByBlockedStatus();

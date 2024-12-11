@@ -26,6 +26,10 @@ const routes: Routes = [
   {
     path: 'taquilleros',
     loadChildren: () => import('./taquilleros/taquilleros.module').then( m => m.TaquillerosPageModule)
+  },
+  {
+    path: 'frecuencies',
+    loadChildren: () => import('./frecuencies/frecuencies.module').then( m => m.FrecuenciesPageModule)
   }
 
 
