@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     { title: 'Conductores', url: 'home/admin/drivers', icon: 'people' },
     { title: 'Oficinistas', url: 'home/admin/clerks', icon: 'briefcase' },
     { title: 'Taquilleros', url: 'home/admin/taquilleros', icon: 'cash' },
-    { title: 'Frecuencias', url: './folder/trash', icon: 'git-branch' },
+    { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
     { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
   ];
 
