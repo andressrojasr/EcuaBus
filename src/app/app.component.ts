@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     { title: 'Taquilleros', url: 'home/admin/taquilleros', icon: 'cash' },
     { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
     { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
+    { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
   ];
 
   ngOnInit(): void {

@@ -32,6 +32,8 @@ import {
   deleteObject
 }  from 'firebase/storage'
 import { User } from '../models/user.model';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Cooperative } from '../models/cooperative.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -139,5 +141,19 @@ export class FirebaseService {
         this.utilsSrv.saveInLocalStorage('user', userData)
       }
     });
+  }
+
+  private cooperativeSubject = new BehaviorSubject<Cooperative | null>(null);
+  cooperative$ = this.cooperativeSubject.asObservable();
+  // Escuchar cambios en tiempo real desde Firebase
+  listenToCooperativeUpdates(cooperativeId: string) {
+    this.firestore
+      .doc<Cooperative>(`cooperatives/${cooperativeId}`)
+      .valueChanges()
+      .subscribe((cooperative) => {
+        this.cooperativeSubject.next(cooperative);
+        // Actualizar localStorage si es necesario
+        localStorage.setItem('cooperative', JSON.stringify(cooperative));
+      });
   }
 }

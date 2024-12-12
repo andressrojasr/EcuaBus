@@ -94,6 +94,8 @@ export class SignUpPage implements OnInit {
 
     try {
       const res = await this.firebase.addDocument(path, this.cooperativeForm.value);
+      this.cooperativeForm.controls['uid'].setValue(res.id)
+      await this.firebase.updateDocument(`cooperatives/${res.id}`,this.cooperativeForm.value)
       this.utils.dismissModal({ success: true });
       return res.id; // Devuelve el UID del documento creado
     } catch (error) {
