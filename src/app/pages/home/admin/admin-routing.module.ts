@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'frecuencies',
     loadChildren: () => import('./frecuencies/frecuencies.module').then( m => m.FrecuenciesPageModule)
+  },
+  {
+    path: 'cooperative',
+    loadChildren: () => import('./cooperative/cooperative.module').then( m => m.CooperativePageModule)
   }
 
 
