@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController, AlertOptions, LoadingController, ModalController, ModalOptions, NavController, ToastController, ToastOptions } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class UtilsService {
   modalController = inject(ModalController)
   alertController = inject(AlertController)
   nav = inject(NavController)
+
+  private userSubject = new BehaviorSubject<any>(this.getFromLocalStorage('user'));
+  user$ = this.userSubject.asObservable(); // Observable que puedes suscribirte
 
   async presentModal(opt:ModalOptions)
   {
@@ -52,7 +56,11 @@ export class UtilsService {
 
   saveInLocalStorage(key:string, value:any)
   {
-    return localStorage.setItem(key, JSON.stringify(value))
+    const res = localStorage.setItem(key, JSON.stringify(value))
+    if (key === 'user') {
+      this.userSubject.next(value);
+    } 
+    return res
   }
 
   getFromLocalStorage(key:string)
@@ -62,7 +70,11 @@ export class UtilsService {
   }
 
   removeFromLocalStorage(key:string){
-    return localStorage.removeItem(key)
+    const res = localStorage.removeItem(key)
+    if (key === 'user') {
+      this.userSubject.next(null); // Notificar cambios
+    }
+    return res
   }
 
   async takePicture(promptLabelHeader:string)
