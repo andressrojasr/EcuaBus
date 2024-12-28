@@ -9,3 +9,32 @@ ion-avatar{
     --border-radius: 15px;
     margin: 0 auto;
 }
+
+ion-datetime {
+    --background: rgb(227, 218, 201); /* Basado en --ion-color-secondary */
+    --background-rgb: 227, 218, 201;
+    --wheel-highlight-background: rgb(162, 214, 194); /* Basado en --ion-color-tertiary */
+    --wheel-highlight-border-radius: 48px;
+    --wheel-fade-background-rgb: 227, 218, 201; /* Basado en --ion-color-secondary */
+  }
+  
+  ion-datetime::part(wheel-item) {
+    color: var(--ion-color-tertiary-contrast); /* #A2D6C2 */
+  }
+  
+  ion-datetime::part(wheel-item active) {
+    color: var(--ion-color-secondary); /* #E3DAC9 */
+  }
+  
+  time-modal{
+    margin: auto auto;
+  }
+  
+  ion-modal {
+    --width: auto; /* Ajusta al contenido */
+    --height: auto; /* Ajusta al contenido */
+    --max-width: 350px; /* Establece un tamaño máximo */
+    --border-radius: 16px; /* Bordes redondeados para estilo */
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Opcional, para darle profundidad */
+    text-align: center;
+  }
