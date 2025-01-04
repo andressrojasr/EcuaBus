@@ -70,7 +70,7 @@ export class SignUpPage implements OnInit {
         duration:3000,
         icon:'checkmark-circle-outline'
       })
-      this.utils.routerLink('/home/admin/bus')
+      this.utils.routerLink('/auth')
     }).catch(err => {
       this.utils.showToast({
         message:err.message,

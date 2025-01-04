@@ -7,6 +7,8 @@ export interface Frecuency{
     stops: Stop[];
     price:number;
     document:string;
+    timeStart: Date;
+    timeEnd: Date;
     time: number;
     isBlocked: boolean;
 }

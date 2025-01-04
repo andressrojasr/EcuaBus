@@ -22,6 +22,9 @@ export class CreateFrecuencyPage implements OnInit {
   user = {} as User
   title: string;
 
+  isModalOpen:boolean = false;
+  control: FormControl;
+
   form= new FormGroup({
     id: new FormControl(''),
     origin: new FormControl('', [Validators.required, Validators.minLength(2)]),
@@ -29,6 +32,8 @@ export class CreateFrecuencyPage implements OnInit {
     stops: new FormArray([]),
     price: new FormControl(0, [Validators.required]),
     document: new FormControl('', [Validators.required]),
+    timeStart: new FormControl(null,[Validators.required]),
+    timeEnd: new FormControl(null,[Validators.required]),
     time: new FormControl(0,[Validators.required]),
     isBlocked: new FormControl(false),
   })
@@ -49,6 +54,8 @@ export class CreateFrecuencyPage implements OnInit {
         price: this.frecuency.price,
         document: this.frecuency.document,
         time: this.frecuency.time,
+        timeStart: this.frecuency.timeStart,
+        timeEnd: this.frecuency.timeEnd,
         isBlocked: this.frecuency.isBlocked
       });
       if (this.frecuency.stops) {
@@ -180,5 +187,29 @@ export class CreateFrecuencyPage implements OnInit {
   
     get stopsArray(): FormArray {
       return this.form.get('stops') as FormArray;
+    }
+
+    openPicker(formControl: FormControl) {
+      this.isModalOpen = true;
+      this.control = formControl
+    }
+    closePicker() {
+      this.isModalOpen = false;
+    }
+
+    onPickerChange(event: any) {
+      const isoString = event.detail.value; // El valor emitido por ion-datetime (ISO completo)
+      if (isoString) {
+        const date = new Date(isoString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const formattedTime = this.formatTime(hours, minutes); // Formato HH:mm
+        this.control.setValue(formattedTime); // Actualiza el FormControl con el formato correcto
+      }
+      this.closePicker();
+    }
+
+    formatTime(hours: number, minutes: number): string {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
 }

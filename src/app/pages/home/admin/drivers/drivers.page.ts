@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { orderBy, where } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
+import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -15,6 +16,7 @@ export class DriversPage {
   utils = inject(UtilsService)
   firebase = inject(FirebaseService)
   router = inject(Router)
+  api = inject(AdminapiService)
   drivers: User[] = []
   filteredDrivers: User[]=[]
   searchTerm: string = '';
@@ -58,7 +60,7 @@ export class DriversPage {
     this.router.navigate(['/home/admin/drivers/create-driver'], { state: { driver } });
   }
 
-  confirmDeleteDriver(driver: User) {
+  confirmLockDriver(driver: User) {
     this.utils.presentAlert({
       header: 'Bloquear conductor',
       message: '¿Estás seguro de bloquear a este conductor?',
@@ -70,6 +72,24 @@ export class DriversPage {
         },
         {
           text: 'Bloquear',
+          handler: () => this.lockDriver(driver),
+        },
+      ],
+    });
+  }
+  
+  confirmDeleteDriver(driver: User) {
+    this.utils.presentAlert({
+      header: 'Eliminar conductor',
+      message: '¿Estás seguro de eliminar a este conductor?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
           handler: () => this.deleteDriver(driver),
         },
       ],
@@ -94,7 +114,7 @@ export class DriversPage {
     });
   }
 
-  async deleteDriver(driver: User) {
+  async lockDriver(driver: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     driver.isBlocked = true
     let path = `cooperatives/${user.uidCooperative}/drivers/${driver.uid}`;
@@ -154,6 +174,34 @@ export class DriversPage {
     } finally {
       loading.dismiss();
     }
+  }
+
+  async deleteDriver(driver: User) {
+    const loading = await this.utils.loading()
+    await loading.present()
+    this.api.deleteUser(driver.uid, driver.uidCooperative, 'drivers').subscribe({
+      next: () => {
+        this.utils.showToast({
+          message: 'Conductor eliminado exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      },
+      error: (error) => {
+        this.utils.showToast({
+          message:"Ha ocurrido un error",
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      }, 
+      complete: () => {
+       loading.dismiss()
+      }
+    });
   }
 
   filterDrivers() {

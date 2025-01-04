@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { orderBy } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
+import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -15,6 +16,7 @@ export class TaquillerosPage {
   utils = inject(UtilsService)
   firebase = inject(FirebaseService)
   router = inject(Router)
+  api = inject(AdminapiService)
   taquilleros: User[] = []
   filteredTaquilleros: User[]=[]
   searchTerm: string = '';
@@ -58,7 +60,7 @@ export class TaquillerosPage {
     this.router.navigate(['/home/admin/taquilleros/create-taquillero'], { state: { taquillero } });
   }
 
-  confirmDeleteTaquillero(taquillero: User) {
+  confirmLockTaquillero(taquillero: User) {
     this.utils.presentAlert({
       header: 'Bloquear taquillero',
       message: '¿Estás seguro de bloquear a este taquillero?',
@@ -70,7 +72,7 @@ export class TaquillerosPage {
         },
         {
           text: 'Bloquear',
-          handler: () => this.deleteTaquillero(taquillero),
+          handler: () => this.lockTaquillero(taquillero),
         },
       ],
     });
@@ -94,7 +96,7 @@ export class TaquillerosPage {
     });
   }
 
-  async deleteTaquillero(taquillero: User) {
+  async lockTaquillero(taquillero: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     taquillero.isBlocked = true
     let path = `cooperatives/${user.uidCooperative}/taquilleros/${taquillero.uid}`;
@@ -154,6 +156,52 @@ export class TaquillerosPage {
     } finally {
       loading.dismiss();
     }
+  }
+
+  confirmDeleteTaquillero(taquillero: User) {
+    this.utils.presentAlert({
+      header: 'Eliminar taquillero',
+      message: '¿Estás seguro de eliminar a este taquillero?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => this.deleteTaquillero(taquillero),
+        },
+      ],
+    });
+  }
+
+  async deleteTaquillero(taquillero: User) {
+    const loading = await this.utils.loading()
+    await loading.present()
+    this.api.deleteUser(taquillero.uid, taquillero.uidCooperative, 'taquilleros').subscribe({
+      next: () => {
+        this.utils.showToast({
+          message: 'Taquillero eliminado exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      },
+      error: (error) => {
+        this.utils.showToast({
+          message:"Ha ocurrido un error",
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      }, 
+      complete: () => {
+       loading.dismiss()
+      }
+    });
   }
 
   filterTaquilleros() {

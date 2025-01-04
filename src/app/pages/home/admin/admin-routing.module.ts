@@ -19,7 +19,8 @@ const routes: Routes = [
   {
     path: 'drivers',
     loadChildren: () => import('./drivers/drivers.module').then( m => m.DriversPageModule)
-  },  {
+  },
+  {
     path: 'clerks',
     loadChildren: () => import('./clerks/clerks.module').then( m => m.ClerksPageModule)
   },
@@ -34,9 +35,11 @@ const routes: Routes = [
   {
     path: 'cooperative',
     loadChildren: () => import('./cooperative/cooperative.module').then( m => m.CooperativePageModule)
+  },
+  {
+    path: 'collector',
+    loadChildren: () => import('./collector/collector.module').then( m => m.CollectorPageModule)
   }
-
-
 ];
 
 @NgModule({

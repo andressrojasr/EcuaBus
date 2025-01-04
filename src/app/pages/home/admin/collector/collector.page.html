@@ -3,25 +3,25 @@
 <ion-content [fullscreen]="true">
   <ion-item lines="none">
     <ion-label class="navigation">
-      Oficinistas
+      Cobradores
     </ion-label>
   </ion-item>
-  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterClerks()" placeholder="Buscar oficinista" animated="true"></ion-searchbar>
-  <ion-toggle [(ngModel)]="isOptionActive" (ionChange)="onToggleChange($event)" labelPlacement="end">Ver oficinistas bloqueados</ion-toggle>
+  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterCollectors()" placeholder="Buscar cobrador" animated="true"></ion-searchbar>
+  <ion-toggle [(ngModel)]="isOptionActive" (ionChange)="onToggleChange($event)" labelPlacement="end">Ver cobradores bloqueados</ion-toggle>
   <ion-list *ngIf="!loading">
-    <ion-item-sliding class="product-item" *ngFor="let p of filteredClerks">
+    <ion-item-sliding class="product-item" *ngFor="let p of filteredCollectors">
       <ion-item>
         <ion-card mode="ios">
           <ion-card-header>
             <ion-card-title>{{p.name}} {{p.lastName}}</ion-card-title>
-            <ion-card-subtitle>Oficinista</ion-card-subtitle>
+            <ion-card-subtitle>Cobrador</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
             <ion-item lines="none" class="item">
               <ion-thumbnail slot="start">
                 <ion-avatar aria-hidden="true" slot="start">
-                  <img alt="Foto del oficinista" [src]="p.photo" />
+                  <img alt="Foto del cobrador" [src]="p.photo" />
                 </ion-avatar>
               </ion-thumbnail>
               <ion-list >
@@ -45,33 +45,33 @@
 
       
       <ion-item-options>
-        <ion-item-option (click)="addUpdateClerk(p)">
+        <ion-item-option (click)="addUpdateCollector(p)">
           <ion-icon class="option-btn" name="create-outline"></ion-icon>
         </ion-item-option>
 
         <!-- Eliminar -->
-        <ion-item-option (click)="confirmLockClerk(p)" color="warning" *ngIf="!isOptionActive">
+        <ion-item-option (click)="confirmLockCollector(p)" color="warning" *ngIf="!isOptionActive">
           <ion-icon class="option-btn" name="remove-circle"></ion-icon>
         </ion-item-option>
         
-        <ion-item-option (click)="confirmUnlockClerk(p)" color="success"  *ngIf="isOptionActive">
+        <ion-item-option (click)="confirmUnlockCollector(p)" color="success"  *ngIf="isOptionActive">
           <ion-icon class="option-btn" name="remove-circle"></ion-icon>
         </ion-item-option>
 
-        <ion-item-option (click)="confirmDeleteClerk(p)" color="danger">
+        <ion-item-option (click)="confirmDeleteCollector(p)" color="danger">
           <ion-icon class="option-btn" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
-   <div *ngIf="!loading && !filteredClerks.length" class="empty">
+   <div *ngIf="!loading && !filteredCollectors.length" class="empty">
     <ion-icon  name="shield-outline"></ion-icon>
-    <h3>No hay oficinistas disponibles</h3>
+    <h3>No hay cobradores disponibles</h3>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addUpdateClerk()">
+    <ion-fab-button (click)="addUpdateCollector()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

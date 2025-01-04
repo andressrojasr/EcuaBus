@@ -6,13 +6,13 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
-  selector: 'app-create-taquillero',
-  templateUrl: './create-taquillero.page.html',
-  styleUrls: ['./create-taquillero.page.scss'],
+  selector: 'app-create-collector',
+  templateUrl: './create-collector.page.html',
+  styleUrls: ['./create-collector.page.scss'],
 })
-export class CreateTaquilleroPage implements OnInit {
+export class CreateCollectorPage implements OnInit {
 
-  taquillero:User
+  collector:User
     
       utils = inject(UtilsService)
       firebase = inject(FirebaseService);
@@ -30,7 +30,7 @@ export class CreateTaquilleroPage implements OnInit {
         isBlocked: new FormControl(false),
         photo: new FormControl('', [Validators.required]),
         uidCooperative: new FormControl(''),
-        rol: new FormControl('Taquillero')
+        rol: new FormControl('Cobrador')
       })
     
       user = {} as User;
@@ -39,34 +39,34 @@ export class CreateTaquilleroPage implements OnInit {
       constructor() { }
     
       ngOnInit() {
-        this.taquillero = history.state.taquillero
+        this.collector = history.state.collector
         this.user = this.utils.getFromLocalStorage('user');
-        if (this.taquillero) {
+        if (this.collector) {
           this.form.patchValue({
-            uid: this.taquillero.uid,
-            name: this.taquillero.name,
-            lastName: this.taquillero.lastName,
-            card: this.taquillero.card,
-            phone: this.taquillero.phone,
-            address: this.taquillero.address || null,
-            email: this.taquillero.email,
-            isBlocked: this.taquillero.isBlocked,
-            photo: this.taquillero.photo,
-            uidCooperative: this.taquillero.uidCooperative,
-            rol: this.taquillero.rol
+            uid: this.collector.uid,
+            name: this.collector.name,
+            lastName: this.collector.lastName,
+            card: this.collector.card,
+            phone: this.collector.phone,
+            address: this.collector.address || null,
+            email: this.collector.email,
+            isBlocked: this.collector.isBlocked,
+            photo: this.collector.photo,
+            uidCooperative: this.collector.uidCooperative,
+            rol: this.collector.rol
           });
           this.form.controls.password.clearValidators();
           this.form.controls.password.updateValueAndValidity();
-          this.title="Actualizar taquillero"
+          this.title="Actualizar cobrador"
         }else{
-          this.title="Crear taquillero"
+          this.title="Crear cobrador"
         }
       }
     
       async takeImage()
       {
-        const dataUrl = ( await this.utils.takePicture('Foto del taquillero')).dataUrl
-        if(this.taquillero){
+        const dataUrl = ( await this.utils.takePicture('Foto del cobrador')).dataUrl
+        if(this.collector){
           this.form.controls.photo.setValue(dataUrl)
         }else{
           this.form.controls.photo.setValue(dataUrl)
@@ -76,10 +76,10 @@ export class CreateTaquilleroPage implements OnInit {
       async submit()
       {
         
-        if(this.taquillero){
+        if(this.collector){
           const loading = await this.utils.loading()
           await loading.present()
-          this.updateTaquillero().subscribe({
+          this.updateCollector().subscribe({
             next: (response) => {
               this.utils.showToast({
                 message: response.message,
@@ -88,7 +88,7 @@ export class CreateTaquilleroPage implements OnInit {
                 position: 'middle',
                 icon: 'checkmark-circle-outline',
               });
-              this.utils.routerLink('/home/admin/taquilleros')
+              this.utils.routerLink('/home/admin/collector')
               loading.dismiss();
             },
             error: (error) => {
@@ -125,7 +125,7 @@ export class CreateTaquilleroPage implements OnInit {
                 position: 'middle',
                 icon: 'checkmark-circle-outline',
               });
-              this.utils.routerLink('/home/admin/taquilleros')
+              this.utils.routerLink('/home/admin/collector')
               loading.dismiss();
             },
             error: (error) => {
@@ -159,15 +159,15 @@ export class CreateTaquilleroPage implements OnInit {
           card: this.form.controls.card.value,
           photo: "ads",
           isBlocked: false,
-          rol: 'Taquillero',
+          rol: 'Cobrador',
         };
-        return this.api.createUser(this.user.uidCooperative, 'taquilleros', userData);
+        return this.api.createUser(this.user.uidCooperative, 'collectors', userData);
       }
     
     
-      updateTaquillero() {
-          let path = `cooperatives/${this.user.uidCooperative}/drivers/${this.taquillero.uid}`;
-          //if (this.form.value.photo !== this.taquillero.photo) {
+      updateCollector() {
+          let path = `cooperatives/${this.user.uidCooperative}/drivers/${this.collector.uid}`;
+          //if (this.form.value.photo !== this.collector.photo) {
               //let dataUrl = this.form.value.photo;
               //let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
               // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
@@ -180,13 +180,14 @@ export class CreateTaquilleroPage implements OnInit {
             card: this.form.controls.card.value,
             photo: this.form.controls.photo.value,
             isBlocked: this.form.controls.isBlocked.value,
-            rol: 'Taquillero',
-            uid: this.taquillero.uid,
-            uidCooperative: this.taquillero.uidCooperative
+            rol: 'Cobrador',
+            uid: this.collector.uid,
+            uidCooperative: this.collector.uidCooperative
           };
-          if(this.form.controls.email.value!== this.taquillero.email) userData.email = this.form.controls.email.value
+          if(this.form.controls.email.value!== this.collector.email) userData.email = this.form.controls.email.value
           if(this.form.controls.password.value!== '') userData.password = this.form.controls.password.value
-          if(this.form.controls.phone.value!== this.taquillero.phone) userData.phone = this.form.controls.phone.value
-          return this.api.updateUser(this.taquillero.uid, this.user.uidCooperative, 'taquilleros', userData);
+          if(this.form.controls.phone.value!== this.collector.phone) userData.phone = this.form.controls.phone.value
+          return this.api.updateUser(this.collector.uid, this.user.uidCooperative, 'collectors', userData);
       }
+
 }

@@ -10,12 +10,13 @@ import { SharedModule } from './shared/shared.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot({
     mode: "ios"
-  }), AppRoutingModule, SharedModule, AngularFireModule.initializeApp(environment.firebaseConfig)],
+  }), AppRoutingModule, SharedModule, AngularFireModule.initializeApp(environment.firebaseConfig),HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })

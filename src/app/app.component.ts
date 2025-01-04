@@ -14,19 +14,23 @@ export class AppComponent implements OnInit {
   router = inject(Router)
   showMenu=true
 
-  user: User = this.utils.getFromLocalStorage('user')
+  user: User | null = null;
   
   public appPages = [
     { title: 'Buses', url: 'home/admin/bus', icon: 'train' },
     { title: 'Conductores', url: 'home/admin/drivers', icon: 'people' },
     { title: 'Oficinistas', url: 'home/admin/clerks', icon: 'briefcase' },
     { title: 'Taquilleros', url: 'home/admin/taquilleros', icon: 'cash' },
+    { title: 'Cobradores', url: 'home/admin/collector', icon: 'person' },
     { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
     { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
     { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
   ];
 
   ngOnInit(): void {
+    this.utils.user$.subscribe((user) => {
+      this.user = user;
+    });
     this.router.events.subscribe(() => {
       const currentUrl = this.router.url;
       this.showMenu = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up'));

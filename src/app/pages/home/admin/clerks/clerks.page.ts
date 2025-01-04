@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { orderBy } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
+import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -15,6 +16,7 @@ export class ClerksPage {
   utils = inject(UtilsService)
   firebase = inject(FirebaseService)
   router = inject(Router)
+  api = inject(AdminapiService)
   clerks: User[] = []
   filteredClerks: User[]=[]
   searchTerm: string = '';
@@ -58,7 +60,7 @@ export class ClerksPage {
     this.router.navigate(['/home/admin/clerks/create-clerk'], { state: { clerk } });
   }
 
-  confirmDeleteClerk(clerk: User) {
+  confirmLockClerk(clerk: User) {
     this.utils.presentAlert({
       header: 'Bloquear oficinista',
       message: '¿Estás seguro de bloquear a este oficinista?',
@@ -70,7 +72,7 @@ export class ClerksPage {
         },
         {
           text: 'Bloquear',
-          handler: () => this.deleteClerk(clerk),
+          handler: () => this.lockClerk(clerk),
         },
       ],
     });
@@ -94,7 +96,7 @@ export class ClerksPage {
     });
   }
 
-  async deleteClerk(clerk: User) {
+  async lockClerk(clerk: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     clerk.isBlocked = true
     let path = `cooperatives/${user.uidCooperative}/clerks/${clerk.uid}`;
@@ -154,6 +156,52 @@ export class ClerksPage {
     } finally {
       loading.dismiss();
     }
+  }
+
+  confirmDeleteClerk(clerk: User) {
+    this.utils.presentAlert({
+      header: 'Eliminar oficinista',
+      message: '¿Estás seguro de eliminar a este oficinista?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => this.deleteClerk(clerk),
+        },
+      ],
+    });
+  }
+
+  async deleteClerk(clerk: User) {
+    const loading = await this.utils.loading()
+    await loading.present()
+    this.api.deleteUser(clerk.uid, clerk.uidCooperative, 'clerks').subscribe({
+      next: () => {
+        this.utils.showToast({
+          message: 'Oficinista eliminado exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      },
+      error: (error) => {
+        this.utils.showToast({
+          message:"Ha ocurrido un error",
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      }, 
+      complete: () => {
+       loading.dismiss()
+      }
+    });
   }
 
   filterClerks() {

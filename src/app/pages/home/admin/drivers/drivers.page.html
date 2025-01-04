@@ -32,6 +32,9 @@
                   <ion-label class="ion-text-wrap">Dirección: {{p.address}}</ion-label>
                 </ion-item>
                 <ion-item>
+                  <ion-label class="ion-text-wrap">Teléfono: {{p.phone}}</ion-label>
+                </ion-item>
+                <ion-item>
                   <ion-label class="ion-text-wrap">Email: {{p.email}}</ion-label>
                 </ion-item>
               </ion-list>
@@ -48,12 +51,16 @@
         </ion-item-option>
 
         <!-- Eliminar -->
-        <ion-item-option (click)="confirmDeleteDriver(p)" color="danger" *ngIf="!isOptionActive">
+        <ion-item-option (click)="confirmLockDriver(p)" color="warning" *ngIf="!isOptionActive">
           <ion-icon class="option-btn" name="remove-circle"></ion-icon>
         </ion-item-option>
         
         <ion-item-option (click)="confirmUnlockDriver(p)" color="success"  *ngIf="isOptionActive">
           <ion-icon class="option-btn" name="remove-circle"></ion-icon>
+        </ion-item-option>
+
+        <ion-item-option (click)="confirmDeleteDriver(p)" color="danger">
+          <ion-icon class="option-btn" name="trash"></ion-icon>
         </ion-item-option>
 
       </ion-item-options>
