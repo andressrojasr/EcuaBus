@@ -79,7 +79,7 @@ export class CreateClerkPage implements OnInit {
       if(this.clerk){
         const loading = await this.utils.loading()
         await loading.present()
-        this.updateDriver().subscribe({
+        this.updateClerk().subscribe({
           next: (response) => {
             this.utils.showToast({
               message: response.message,
@@ -165,7 +165,7 @@ export class CreateClerkPage implements OnInit {
     }
   
   
-    updateDriver() {
+    updateClerk() {
         let path = `cooperatives/${this.user.uidCooperative}/drivers/${this.clerk.uid}`;
         //if (this.form.value.photo !== this.clerk.photo) {
             //let dataUrl = this.form.value.photo;
