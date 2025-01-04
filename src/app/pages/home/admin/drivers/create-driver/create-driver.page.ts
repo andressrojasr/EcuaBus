@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
+import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -15,13 +16,14 @@ export class CreateDriverPage implements OnInit {
 
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
+  api = inject(AdminapiService)
 
   form= new FormGroup({
     uid: new FormControl(''),
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
     lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
     card: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
-    phone: new FormControl(''),
+    phone: new FormControl('', [Validators.required, Validators.minLength(13),Validators.maxLength(13)]),
     address: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -31,22 +33,7 @@ export class CreateDriverPage implements OnInit {
     rol: new FormControl('Conductor')
   })
 
-  formUpdate= new FormGroup({
-    uid: new FormControl(''),
-    name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    card: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
-    phone: new FormControl(''),
-    address: new FormControl('', [Validators.required]),
-    isBlocked: new FormControl(false),
-    photo: new FormControl('', [Validators.required]),
-    uidCooperative: new FormControl(''),
-    rol: new FormControl('Conductor')
-  })
-
   user = {} as User;
-
-
   title: string;
 
   constructor() { }
@@ -55,18 +42,21 @@ export class CreateDriverPage implements OnInit {
     this.driver = history.state.driver
     this.user = this.utils.getFromLocalStorage('user');
     if (this.driver) {
-      this.formUpdate.patchValue({
+      this.form.patchValue({
         uid: this.driver.uid,
         name: this.driver.name,
         lastName: this.driver.lastName,
         card: this.driver.card,
-        phone: "",
+        phone: this.driver.phone,
         address: this.driver.address || null,
+        email: this.driver.email,
         isBlocked: this.driver.isBlocked,
         photo: this.driver.photo,
         uidCooperative: this.driver.uidCooperative,
         rol: this.driver.rol
       });
+      this.form.controls.password.clearValidators();
+      this.form.controls.password.updateValueAndValidity();
       this.title="Actualizar conductor"
     }else{
       this.title="Crear conductor"
@@ -77,7 +67,7 @@ export class CreateDriverPage implements OnInit {
   {
     const dataUrl = ( await this.utils.takePicture('Foto del conductor')).dataUrl
     if(this.driver){
-      this.formUpdate.controls.photo.setValue(dataUrl)
+      this.form.controls.photo.setValue(dataUrl)
     }else{
       this.form.controls.photo.setValue(dataUrl)
     }
@@ -87,7 +77,32 @@ export class CreateDriverPage implements OnInit {
   {
     
     if(this.driver){
-      this.updateDriver()
+      const loading = await this.utils.loading()
+      await loading.present()
+      this.updateDriver().subscribe({
+        next: (response) => {
+          this.utils.showToast({
+            message: response.message,
+            duration: 1500,
+            color: 'success',
+            position: 'middle',
+            icon: 'checkmark-circle-outline',
+          });
+          this.utils.routerLink('/home/admin/drivers')
+          loading.dismiss();
+        },
+        error: (error) => {
+          this.utils.showToast({
+            message: error.error.message,
+            color: 'danger',
+            position: 'middle',
+            duration: 3000,
+            icon: 'alert-circle-outline'
+          });
+          loading.dismiss();
+          console.error(error);
+        }
+      });
     }else{
       if (this.form.invalid) {
         this.utils.showToast({
@@ -101,93 +116,78 @@ export class CreateDriverPage implements OnInit {
       }
       const loading = await this.utils.loading()
       await loading.present()
-      this.firebase.signUp(this.form.value as User).then( async res => {
-        const name = this.form.value.name as string
-        let uid = res.user.uid
-        this.form.controls.uid.setValue(uid)
-        this.form.controls.uidCooperative.setValue(this.user.uidCooperative)
-        this.setUserInfo(uid)
-        this.utils.showToast({
-          message:'Conductor creado con éxito',
-          color:'success',
-          position:'middle',
-          duration:3000,
-          icon:'checkmark-circle-outline'
-        })
-        this.utils.routerLink('/home/admin/drivers')
-      }).catch(err => {
-        this.utils.showToast({
-          message:err.message,
-          color:'danger',
-          position:'middle',
-          duration:3000,
-          icon:'alert-circle-outline'
-        })
-      }).finally(() => {
-        loading.dismiss()
-      })
+      this.createUser().subscribe({
+        next: (response) => {
+          this.utils.showToast({
+            message: response.message,
+            duration: 1500,
+            color: 'success',
+            position: 'middle',
+            icon: 'checkmark-circle-outline',
+          });
+          this.utils.routerLink('/home/admin/drivers')
+          loading.dismiss();
+        },
+        error: (error) => {
+          this.utils.showToast({
+            message: error.error.message,
+            color: 'danger',
+            position: 'middle',
+            duration: 3000,
+            icon: 'alert-circle-outline'
+          });
+          loading.dismiss();
+          console.error(error);
+        }
+      });
     }
   }
 
-  async setUserInfo(uid:string)
-  {
-    let path = `cooperatives/${this.user.uidCooperative}/drivers/${uid}`
-    delete this.form.value.password
+  createUser() {
     // === Subir la imagen y obtener la url ===
     // let dataUrl = this.form.value.photo;
     // let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
     // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
     // this.form.controls.photo.setValue(imageUrl);
-    this.firebase.setDocument(path,this.form.value).then( async res => {
-    }).catch(err => {
-      this.utils.showToast({
-        message:err.message,
-        color:'danger',
-        position:'middle',
-        duration:3000,
-        icon:'alert-circle-outline'
-      })
-    })    
+    const userData = {
+      email: this.form.controls.email.value,
+      password: this.form.controls.password.value,
+      name: this.form.controls.name.value,
+      lastName: this.form.controls.lastName.value,
+      phone: this.form.controls.phone.value,
+      address: this.form.controls.address.value,
+      card: this.form.controls.card.value,
+      photo: "ads",
+      isBlocked: false,
+      rol: 'Conductor',
+    };
+    return this.api.createUser(this.user.uidCooperative, 'drivers', userData);
   }
 
 
-    private async updateDriver() {
+  updateDriver() {
       let path = `cooperatives/${this.user.uidCooperative}/drivers/${this.driver.uid}`;
-
-      const loading = await this.utils.loading();
-      await loading.present();
-
-      try {
-        if (this.formUpdate.value.photo !== this.driver.photo) {
-          let dataUrl = this.formUpdate.value.photo;
-          let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
+      //if (this.form.value.photo !== this.driver.photo) {
+          //let dataUrl = this.form.value.photo;
+          //let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
           // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
           // this.formUpdate.controls.photo.setValue(imageUrl);
-        }
-
-        await this.firebase.updateDocument(path, this.formUpdate.value);
-
-        this.utils.showToast({
-          message: 'Conductor actualizado exitosamente',
-          duration: 1500,
-          color: 'success',
-          position: 'middle',
-          icon: 'checkmark-circle-outline',
-        });
-        this.utils.routerLink('/home/admin/drivers')
-      } catch (error) {
-        console.log(error);
-
-        this.utils.showToast({
-          message: error.message,
-          duration: 2500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle-outline',
-        });
-      } finally {
-        loading.dismiss();
-      }
-    }
+      //}
+      const userData: any = {     
+        name: this.form.controls.name.value,
+        lastName: this.form.controls.lastName.value,
+        address: this.form.controls.address.value,
+        card: this.form.controls.card.value,
+        photo: this.form.controls.photo.value,
+        isBlocked: this.form.controls.isBlocked.value,
+        rol: 'Conductor',
+        uid: this.driver.uid,
+        uidCooperative: this.driver.uidCooperative
+      };
+      if(this.form.controls.email.value!== this.driver.email) userData.email = this.form.controls.email.value
+      if(this.form.controls.password.value!== '') userData.password = this.form.controls.password.value
+      if(this.form.controls.phone.value!== this.driver.phone) userData.phone = this.form.controls.phone.value
+      return this.api.updateUser(this.driver.uid, this.user.uidCooperative, 'drivers', userData);
+  }
 
 }
