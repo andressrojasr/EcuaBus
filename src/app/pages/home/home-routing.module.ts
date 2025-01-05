@@ -10,7 +10,15 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
+  },  {
+    path: 'taquilleros',
+    loadChildren: () => import('./taquilleros/taquilleros.module').then( m => m.TaquillerosPageModule)
   },
+  {
+    path: 'clerk',
+    loadChildren: () => import('./clerk/clerk.module').then( m => m.ClerkPageModule)
+  },
+
 
 ];
 
