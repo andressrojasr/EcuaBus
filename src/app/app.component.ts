@@ -27,6 +27,15 @@ export class AppComponent implements OnInit {
     { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
   ];
 
+  public taquilleros = [
+    { title: 'Booleteria', url: 'home/taquilleros/booletery', icon: 'cash' },
+    { title: 'Conductores', url: 'home/taquilleros/tickets', icon: 'pricetag' },
+  ]
+
+  public clerks = [
+    { title: 'Viajes', url: 'home/clerk/trips', icon: 'cash' },
+  ]
+
   ngOnInit(): void {
     this.utils.user$.subscribe((user) => {
       this.user = user;

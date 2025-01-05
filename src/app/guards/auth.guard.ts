@@ -9,7 +9,9 @@ export const authGuard: CanActivateFn = (route, state) => {
   const cooperative = utils.getFromLocalStorage('cooperative');
 
   if (user && cooperative) {
-    if(user.rol == "Administrador") utils.routerLink("/home/admin/bus")  
+    if(user.rol == "Administrador") utils.routerLink("/home/admin/bus")
+    if(user.rol == "Taquillero") utils.routerLink("/home/taquilleros/booletery")
+    if(user.rol == "Oficinista") utils.routerLink("/home/clerk/trips")       
     return false;
   } else {
     return true;
