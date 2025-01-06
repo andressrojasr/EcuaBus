@@ -190,7 +190,7 @@ export class TravelsPage{
 
 
   editFrecuency(frecuency: Travel) {
-    // Navegar a la página de crear/actualizar frecuencia
+    // Navegar asía la página de crear/actualizar frecuencia
     this.router.navigate(['/home/admin/travels/create-travels'], { state: { frecuency: frecuency } });
   }
   
