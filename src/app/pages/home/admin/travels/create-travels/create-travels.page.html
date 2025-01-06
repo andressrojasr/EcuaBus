@@ -1,0 +1,68 @@
+<app-header [back]="true"></app-header>
+
+<ion-content [fullscreen]="true">
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Información de la Frecuencia -->
+
+
+    <!-- Información del Viaje -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información del Viaje</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.conductor"
+
+        label="Conductor">
+        </app-custom-input>
+
+
+        <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.idbus"
+
+        label="ID del Bus">
+        </app-custom-input>
+
+        <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.idcobrador"
+
+        label="ID del Cobrador">
+        </app-custom-input>
+
+        <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.idfrec"
+
+        label="ID del frecuencia">
+        </app-custom-input>
+
+
+
+
+
+        <ion-button
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{ frecuency ? 'Actualizar Viaje' : 'Agregar Viaje' }}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+      </ion-card-content>
+
+
+
+    </ion-card>
+
+    <!-- Botones -->
+
+  </form>
+</ion-content>

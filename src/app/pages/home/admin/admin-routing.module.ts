@@ -39,7 +39,11 @@ const routes: Routes = [
   {
     path: 'collector',
     loadChildren: () => import('./collector/collector.module').then( m => m.CollectorPageModule)
+  },  {
+    path: 'travels',
+    loadChildren: () => import('./travels/travels.module').then( m => m.TravelsPageModule)
   }
+
 ];
 
 @NgModule({
