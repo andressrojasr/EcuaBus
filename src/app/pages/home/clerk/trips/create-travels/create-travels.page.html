@@ -1,0 +1,60 @@
+<app-header [back]="true"></app-header>
+<ion-content [fullscreen]="true">
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información del Viaje</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <!-- Conductor -->
+        <ion-item>
+          <ion-label>Conductor</ion-label>
+          <ion-select [formControl]="form.controls.conductor">
+            <ion-select-option *ngFor="let conductor of conductors" [value]="conductor.id">
+              {{ conductor.name }} - {{ conductor.phone }} ({{ conductor.ci }})
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Bus -->
+        <ion-item>
+          <ion-label>Bus</ion-label>
+          <ion-select [formControl]="form.controls.idbus">
+            <ion-select-option *ngFor="let bus of buses" [value]="bus.bus_number">
+              {{ bus.brand }} - {{ bus.plate }} (Asientos: {{ bus.seats_quantity }})
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        
+
+        <!-- Cobrador -->
+        <ion-item>
+          <ion-label>Cobrador</ion-label>
+          <ion-select [formControl]="form.controls.idcobrador">
+            <ion-select-option value="">Sin cobrador</ion-select-option>
+            <ion-select-option *ngFor="let conductor of conductors" [value]="conductor.id">
+              {{ conductor.name }} - {{ conductor.phone }} ({{ conductor.ci }})
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Frecuencia -->
+        <ion-item>
+          <ion-label>Frecuencia</ion-label>
+          <ion-select [formControl]="form.controls.idfrec">
+            <ion-select-option *ngFor="let frecuencia of frequencies" [value]="frecuencia.id">
+              {{ frecuencia.origin }} -> {{ frecuencia.destiny }} (Hora: {{ frecuencia.timeStart }} - {{ frecuencia.timeEnd }})
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        
+
+        <ion-button class="ion-margin" type="submit" mode="ios" [disabled]="form.invalid">
+          {{ frecuency ? 'Actualizar Viaje' : 'Agregar Viaje' }}
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>
