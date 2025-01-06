@@ -190,11 +190,11 @@ export class TripsPage {
 
 
   editFrecuency(frecuency: Travel) {
-    // Navegar asía la página de crear/actualizar frecuencia
+    // Navegar asía la página de crear/actualizar viaje
     this.router.navigate(['/home/clerk/trips/create-travels'], { state: { frecuency: frecuency } });
   }
   
-  // Método para confirmar la eliminación de una frecuencia
+  // Método para confirmar la eliminación de un viaje
   confirmDeleteFrecuency(frecuency: Travel) {
     this.utils.presentAlert({
       header: 'Eliminar frecuencia',
@@ -213,7 +213,7 @@ export class TripsPage {
     });
   }
   
-  // Método para eliminar una frecuencia
+  // Método para eliminar una viajes
   async deleteFrecuency(frecuency: Travel) {
     const user: User = this.utils.getFromLocalStorage('user');
     let path = `cooperatives/${user.uidCooperative}/viajes/${frecuency.id}`;
