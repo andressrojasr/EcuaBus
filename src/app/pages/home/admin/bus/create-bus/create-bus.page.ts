@@ -77,9 +77,14 @@ export class CreateBusPage implements OnInit {
     await loading.present();
 
     delete this.form.value.id
+    delete this.form.value.partner
 
     this.firebase.addDocument(path, this.form.value).then(async res => {
-      
+      const busId = res.id;
+
+    // Actualizamos el documento con la ID generada
+    await this.firebase.updateDocument(`${path}/${busId}`, { id: busId });
+
       this.utils.showToast({
         message: 'Bus creado exitosamente',
         duration: 1500,
