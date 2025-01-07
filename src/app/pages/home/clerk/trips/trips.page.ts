@@ -48,7 +48,7 @@ export class TripsPage {
       next: (res: any) => {
         this.frecuencies = res
         this.filteredFrecuencies =this.frecuencies
-        console.log("PATAT0TA", JSON.stringify(this.frecuencies, null, 2));
+        //console.log("PATAT0TA", JSON.stringify(this.frecuencies, null, 2));
         this.loading = false;
       }
     })
@@ -65,15 +65,14 @@ export class TripsPage {
 
   filterFrecuencies() {
     const searchTerm = this.searchTerm.toLowerCase();
-    console.log("velociraptor00")
+
     if (searchTerm.trim() === '') {
       this.filteredFrecuencies = this.frecuencies;
-      console.log("velociraptor")
     } else {
       this.filteredFrecuencies = this.frecuencies.filter(frecuency => {
         return (
           frecuency.id.toLowerCase().includes(searchTerm) ||
-          frecuency.conductor.toLowerCase().includes(searchTerm) ||
+          frecuency.idconductor.toLowerCase().includes(searchTerm) ||
           frecuency.idbus.toLowerCase().includes(searchTerm)
         );
       });
@@ -82,7 +81,7 @@ export class TripsPage {
 
   downloadDocument(p: Travel){
     const link = document.createElement('a');
-    link.download = `Frecuencia ${p.id} ${p.conductor} ${p.idbus}`;
+    link.download = `Viajes ${p.id} ${p.idconductor} ${p.idbus}`;
     link.click();
   }
 
@@ -244,4 +243,7 @@ export class TripsPage {
       loading.dismiss();
     }
   }
+
+
+
 }

@@ -22,13 +22,30 @@ export class CreateTravelsPage implements OnInit {
   buses: any[] = [];
   conductors: any[] = [];
   frequencies: any[] = [];
+  collectors: any[] = [];
+
+  selectedBusSeats: string = ''; // Variable para almacenar el valor de los asientos
+
+  // Otras funciones...
+
+  // Función para capturar el cambio del bus
+  onBusChange(event: any) {
+    // Encuentra el bus seleccionado
+    const selectedBus = this.buses.find(bus => bus.id === event.detail.value);
+
+    if (selectedBus) {
+      this.selectedBusSeats = selectedBus.seats.toString(); // Guarda el valor de los asientos como string
+      console.log('Asientos seleccionados:', this.selectedBusSeats);
+    }
+  }
 
   form = new FormGroup({
     id: new FormControl(''),
-    conductor: new FormControl('', Validators.required),
+    idconductor: new FormControl('', Validators.required),
     idbus: new FormControl('', Validators.required),
     idcobrador: new FormControl(''), // No requerido
     idfrec: new FormControl('', Validators.required),
+    seats: new FormControl(''),
   });
   
 
@@ -42,7 +59,7 @@ export class CreateTravelsPage implements OnInit {
     if (this.frecuency) {
       this.form.patchValue({
         id: this.frecuency.id,
-        conductor: this.frecuency.conductor,
+        idconductor: this.frecuency.idconductor,
         idbus: this.frecuency.idbus,
         idcobrador: this.frecuency.idcobrador,
         idfrec: this.frecuency.idfrec,
@@ -64,6 +81,11 @@ export class CreateTravelsPage implements OnInit {
     // Cargar conductores
     this.firebase.getCollectionData(`${cooperativePath}/conductores`).subscribe((data: any) => {
       this.conductors = data.filter((c: any) => c.rol === 'conductor');
+    });
+
+    // Cargar conductores
+    this.firebase.getCollectionData(`${cooperativePath}/collectors`).subscribe((data: any) => {
+      this.collectors = data.filter((c: any) => c.rol === 'Cobrador');
     });
 
     // Cargar frecuencias
@@ -97,7 +119,7 @@ export class CreateTravelsPage implements OnInit {
     await loading.present();
 
     delete this.form.value.id;
-
+    this.form.value.seats=this.selectedBusSeats;
     this.firebase
       .addDocument(path, this.form.value)
       .then(() => {
@@ -129,6 +151,7 @@ export class CreateTravelsPage implements OnInit {
     await loading.present();
 
     try {
+      this.form.value.seats=this.selectedBusSeats;
       await this.firebase.updateDocument(path, this.form.value);
       this.utils.showToast({
         message: 'Viaje actualizado exitosamente',
@@ -148,4 +171,6 @@ export class CreateTravelsPage implements OnInit {
       loading.dismiss();
     }
   }
+
+
 }

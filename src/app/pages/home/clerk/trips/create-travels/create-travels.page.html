@@ -10,7 +10,7 @@
         <!-- Conductor -->
         <ion-item>
           <ion-label>Conductor</ion-label>
-          <ion-select [formControl]="form.controls.conductor">
+          <ion-select [formControl]="form.controls.idconductor">
             <ion-select-option *ngFor="let conductor of conductors" [value]="conductor.id">
               {{ conductor.name }} - {{ conductor.phone }} ({{ conductor.ci }})
             </ion-select-option>
@@ -20,12 +20,13 @@
         <!-- Bus -->
         <ion-item>
           <ion-label>Bus</ion-label>
-          <ion-select [formControl]="form.controls.idbus">
-            <ion-select-option *ngFor="let bus of buses" [value]="bus.bus_number">
-              {{ bus.brand }} - {{ bus.plate }} (Asientos: {{ bus.seats_quantity }})
+          <ion-select [formControl]="form.controls.idbus" (ionChange)="onBusChange($event)">
+            <ion-select-option *ngFor="let bus of buses" [value]="bus.id">
+              {{ bus.plate }} Asiento {{ bus.seats }}
             </ion-select-option>
           </ion-select>
         </ion-item>
+        
         
 
         <!-- Cobrador -->
@@ -33,8 +34,8 @@
           <ion-label>Cobrador</ion-label>
           <ion-select [formControl]="form.controls.idcobrador">
             <ion-select-option value="">Sin cobrador</ion-select-option>
-            <ion-select-option *ngFor="let conductor of conductors" [value]="conductor.id">
-              {{ conductor.name }} - {{ conductor.phone }} ({{ conductor.ci }})
+            <ion-select-option *ngFor="let collector of collectors" [value]="collector.id">
+              {{ collector.name }} - {{ collector.phone }} ({{ collector.card }})
             </ion-select-option>
           </ion-select>
         </ion-item>
