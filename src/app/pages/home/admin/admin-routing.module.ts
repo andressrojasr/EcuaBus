@@ -39,7 +39,15 @@ const routes: Routes = [
   {
     path: 'collector',
     loadChildren: () => import('./collector/collector.module').then( m => m.CollectorPageModule)
+  },  {
+    path: 'edit-profile',
+    loadChildren: () => import('./edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
+  },
+  {
+    path: 'errors',
+    loadChildren: () => import('./errors/errors.module').then( m => m.ErrorsPageModule)
   }
+
 ];
 
 @NgModule({

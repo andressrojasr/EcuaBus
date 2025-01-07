@@ -55,7 +55,7 @@
             <ion-select fill="outline" class="select" label="Cooperativa" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)" *ngIf="rol !== 'Administrador'">
               <ion-select-option *ngFor="let p of cooperatives" [value]="p.uid">{{p.name}}</ion-select-option>
             </ion-select>
-            <ion-label class="forget-password">¿Olvidaste tu contraseña?</ion-label>
+            <ion-label class="forget-password" routerLink="reset-password">¿Olvidaste tu contraseña?</ion-label>
             <ion-button 
               type="submit"
               expand="block" 

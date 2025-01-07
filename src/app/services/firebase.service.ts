@@ -6,7 +6,10 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signOut,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  updateEmail,
+  updatePassword,
+  verifyBeforeUpdateEmail
 } from 'firebase/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'
 import {
@@ -74,6 +77,11 @@ export class FirebaseService {
     }else{
       throw new Error('No user is currently signed in. ')
     }
+  }
+
+  updateUserPassword(newPassword: string) {
+    const user = getAuth().currentUser;
+    return updatePassword(user, newPassword)
   }
 
 

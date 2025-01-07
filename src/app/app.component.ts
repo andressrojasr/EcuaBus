@@ -25,6 +25,8 @@ export class AppComponent implements OnInit {
     { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
     { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
     { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
+    { title: 'Perfil', url: 'home/admin/edit-profile', icon: 'settings' },
+    { title: 'Reportar Errores', url: 'home/admin/errors', icon: 'bug' },
   ];
 
   public taquilleros = [
@@ -42,7 +44,7 @@ export class AppComponent implements OnInit {
     });
     this.router.events.subscribe(() => {
       const currentUrl = this.router.url;
-      this.showMenu = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up'));
+      this.showMenu = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up') || currentUrl.includes('/not-found'));
     });
   }
   constructor() {}

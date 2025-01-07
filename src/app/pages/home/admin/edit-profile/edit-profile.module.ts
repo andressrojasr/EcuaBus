@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ResetPasswordPageRoutingModule } from './reset-password-routing.module';
+import { EditProfilePageRoutingModule } from './edit-profile-routing.module';
 
-import { ResetPasswordPage } from './reset-password.page';
+import { EditProfilePage } from './edit-profile.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -16,8 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     IonicModule,
     ReactiveFormsModule,
     SharedModule,
-    ResetPasswordPageRoutingModule
+    EditProfilePageRoutingModule
   ],
-  declarations: [ResetPasswordPage]
+  declarations: [EditProfilePage]
 })
-export class ResetPasswordPageModule {}
+export class EditProfilePageModule {}
