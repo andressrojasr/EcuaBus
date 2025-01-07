@@ -290,6 +290,7 @@ export class LoginPage implements AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {
+      this.playAnimation();
       this.getCooperatives()
   }
 

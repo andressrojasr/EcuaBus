@@ -19,6 +19,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
     canActivate: [homeGuard]
   },
+  {
+    path: 'not-found',
+    loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
+  },
+  {
+    path: '**', // Ruta comodín para manejar rutas no encontradas
+    redirectTo: '/not-found', // Redirige a la página 404
+  },
 ];
 
 @NgModule({

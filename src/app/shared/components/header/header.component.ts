@@ -31,7 +31,7 @@ export class HeaderComponent  implements OnInit {
   ngOnInit() {
     this.router.events.subscribe(() => {
       const currentUrl = this.router.url;
-      this.showTitle = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up'));
+      this.showTitle = !(currentUrl.includes('/auth') || currentUrl.includes('/auth/sign-up') || currentUrl.includes('/not-found'));
     });
 
     this.user = this.utils.getFromLocalStorage('user');
