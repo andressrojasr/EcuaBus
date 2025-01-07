@@ -1,0 +1,100 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label>
+      Editar Perfil
+    </ion-label>
+  </ion-item>
+  <div class="d-flex-center">
+    <form
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+
+      <ion-avatar *ngIf="form.value.photo">
+        <img [src]="form.value.photo" />
+      </ion-avatar>
+      <!-- Si existe o no imagen -->
+      <ion-icon class="image-icon" *ngIf="!form.value.photo" name="image-outline"></ion-icon>
+      <br>
+      <!-- botón para tomar imagen -->
+      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+        Seleccionar logotipo
+      </ion-button>
+      <app-custom-input 
+              icon="person" 
+              type="text" 
+              label="Nombre" 
+              autocomplete="name" 
+              [control]="form.controls.name">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="form.controls.name.errors && form.controls.name.touched">
+              <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+              <div *ngIf="form.controls.name.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</div>
+            </div>
+            <!-- Input de apellido -->
+            <app-custom-input 
+              icon="person-add" 
+              type="text" 
+              label="Apellido" 
+              autocomplete="lastName" 
+              [control]="form.controls.lastName">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
+              <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
+              <div *ngIf="form.controls.lastName.errors?.['minlength']">El apellido debe tener al menos 2 caracteres</div>
+            </div>
+            <!-- Input de cedula -->
+            <app-custom-input 
+              icon="card" 
+              type="text" 
+              label="Cédula" 
+              autocomplete="card" 
+              [control]="form.controls.card">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="form.controls.card.errors && form.controls.card.touched">
+              <div *ngIf="form.controls.card.errors?.['required']">La cédula es requerida</div>
+              <div *ngIf="form.controls.card.errors?.['minlength']">La cédula debe tener 10 caracteres</div>
+              <div *ngIf="form.controls.card.errors?.['maxlength']">La cédula debe tener 10 caracteres</div>
+            </div>
+            <!-- Input de celular -->
+            <app-custom-input 
+              icon="phone-portrait" 
+              type="text" 
+              label="Celular" 
+              autocomplete="phone" 
+              [control]="form.controls.phone">
+            </app-custom-input>
+            <div
+              class="validators"
+              *ngIf="form.controls.phone.errors && form.controls.phone.touched">
+              <div *ngIf="form.controls.phone.errors?.['required']">El celular es requerido</div>
+              <div *ngIf="form.controls.phone.errors?.['minlength']">El celular debe tener 10 caracteres</div>
+              <div *ngIf="form.controls.phone.errors?.['maxlength']">El celular debe tener 10 caracteres</div>
+            </div>
+            <app-custom-input 
+            icon="key" 
+            type="password" 
+            label="Contraseña" 
+            [control]="form.controls.password">
+          </app-custom-input>
+      <!-- Botón para registrar o actualizar -->
+      <ion-button
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        Actualizar Usuario
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

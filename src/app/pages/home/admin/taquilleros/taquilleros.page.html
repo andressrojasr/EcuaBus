@@ -1,0 +1,79 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label class="navigation">
+      Taquilleros
+    </ion-label>
+  </ion-item>
+  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterTaquilleros()" placeholder="Buscar taquillero" animated="true"></ion-searchbar>
+  <ion-toggle [(ngModel)]="isOptionActive" (ionChange)="onToggleChange($event)" labelPlacement="end">Ver taquilleros bloqueados</ion-toggle>
+  <ion-list *ngIf="!loading">
+    <ion-item-sliding class="product-item" *ngFor="let p of filteredTaquilleros">
+      <ion-item>
+        <ion-card mode="ios">
+          <ion-card-header>
+            <ion-card-title>{{p.name}} {{p.lastName}}</ion-card-title>
+            <ion-card-subtitle>Taquillero</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-item lines="none" class="item">
+              <ion-thumbnail slot="start">
+                <ion-avatar aria-hidden="true" slot="start">
+                  <img alt="Foto del taquillero" [src]="p.photo" />
+                </ion-avatar>
+              </ion-thumbnail>
+              <ion-list >
+                <ion-item>
+                  <ion-label class="ion-text-wrap">Número de Cédula: {{p.card}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="ion-text-wrap">Dirección: {{p.address}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="ion-text-wrap">Teléfono: {{p.phone}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="ion-text-wrap">Email: {{p.email}}</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+
+      
+      <ion-item-options>
+        <ion-item-option (click)="addUpdateTaquillero(p)">
+          <ion-icon class="option-btn" name="create-outline"></ion-icon>
+        </ion-item-option>
+
+        <!-- Eliminar -->
+        <ion-item-option (click)="confirmLockTaquillero(p)" color="warning" *ngIf="!isOptionActive">
+          <ion-icon class="option-btn" name="remove-circle"></ion-icon>
+        </ion-item-option>
+        
+        <ion-item-option (click)="confirmUnlockTaquillero(p)" color="success"  *ngIf="isOptionActive">
+          <ion-icon class="option-btn" name="remove-circle"></ion-icon>
+        </ion-item-option>
+
+        <ion-item-option (click)="confirmDeleteTaquillero(p)" color="danger">
+          <ion-icon class="option-btn" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+   <div *ngIf="!loading && !filteredTaquilleros.length" class="empty">
+    <ion-icon  name="shield-outline"></ion-icon>
+    <h3>No hay taquilleros disponibles</h3>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addUpdateTaquillero()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+

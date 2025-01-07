@@ -1,0 +1,157 @@
+<app-header [back]="true"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label>
+      Frecuencias > {{title}}
+    </ion-label>
+  </ion-item>
+  <div class="d-flex-center">
+    <form
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+      <!-- Caja de texto para el nombre -->
+      <ion-avatar *ngIf="form.value.document">
+        <img [src]="form.value.document" />
+      </ion-avatar>
+      <!-- Si existe o no imagen -->
+      <ion-icon class="image-icon" *ngIf="!form.value.document" name="document-outline"></ion-icon>
+      <br>
+      <!-- botón para tomar imagen -->
+      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+        Seleccionar documento
+      </ion-button>
+
+      <app-custom-input
+        icon="pin"
+        autocomplete="origin"
+        [control]="form.controls.origin"
+        type="text"
+        label="Origen">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.origin.errors && form.controls.origin.touched">
+        <div *ngIf="form.controls.origin.errors?.['required']">El origen es requerido</div>
+        <div *ngIf="form.controls.origin.errors?.['minlength']">Ingrese al menos 2 caracteres</div>
+      </div>
+
+      <div formArrayName="stops">
+        <div *ngFor="let stop of stopsArray.controls; let i = index" [formGroupName]="i">
+          <ion-item>
+            <ion-label position="floating">Parada</ion-label>
+            <ion-input formControlName="name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Precio</ion-label>
+            <ion-input type="number" formControlName="price"></ion-input>
+          </ion-item>
+          <ion-button color="danger" (click)="removeStop(i)">Eliminar</ion-button>
+        </div>
+      </div>
+      <ion-button (click)="addStop()" color="success">Agregar parada</ion-button>
+
+      <app-custom-input
+        icon="pin"
+        autocomplete="destiny"
+        [control]="form.controls.destiny"
+        type="text"
+        label="Destino">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.destiny.errors && form.controls.destiny.touched">
+        <div *ngIf="form.controls.destiny.errors?.['required']">El destino es requerido</div>
+        <div *ngIf="form.controls.destiny.errors?.['minlength']">Ingrese al menos 2 caracteres</div>
+      </div>
+
+      <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.price"
+        type="number"
+        label="Precio de viaje">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.price.errors && form.controls.price.touched">
+        <div *ngIf="form.controls.price.errors?.['required']">El precio es requerido</div>
+      </div>
+
+      <app-custom-input
+        icon="alarm"
+        autocomplete="time"
+        [control]="form.controls.time"
+        type="number"
+        label="Tiempo aproximado de viaje">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.time.errors && form.controls.time.touched">
+        <div *ngIf="form.controls.time.errors?.['required']">El tiempo de aproximado del viaje es requerido</div>
+      </div>
+      <ion-item>
+        <ion-input
+        type="text"
+        label="Hora salida"
+        [formControl]="form.controls.timeStart"
+        labelPlacement="floating"
+        readonly
+        (click)="openPicker(form.controls.timeStart)"
+        [value]="form.controls.timeStart.value"
+        placeholder="Seleccionar hora de salida"
+        [disabled]="true">
+      </ion-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.timeStart.errors && form.controls.timeStart.touched">
+        <div *ngIf="form.controls.timeStart.errors?.['required']">La hora de salida es requerida</div>
+      </div>
+      </ion-item>
+      <ion-item>
+        <ion-input
+        type="text"
+        label="Hora llegada"
+        [formControl]="form.controls.timeEnd"
+        labelPlacement="floating"
+        readonly
+        (click)="openPicker(form.controls.timeEnd)"
+        [value]="form.controls.timeEnd.value"
+        placeholder="Seleccionar hora de llegada"
+        [disabled]="true">
+      </ion-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.timeEnd.errors && form.controls.timeEnd.touched">
+        <div *ngIf="form.controls.timeEnd.errors?.['required']">La hora de llegada es requerida</div>
+      </div>
+      </ion-item>
+      <ion-button
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{ frecuency ? 'Actualizar Frecuencia' : 'Agregar Frecuencia' }}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
+
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="closePicker()">
+  <ng-template>
+    <ng-container>
+      <ion-datetime
+        presentation="time"
+        [preferWheel]="true"
+        (ionChange)="onPickerChange($event)"
+        showDefaultButtons="true"
+        cancelText="Cancelar"
+        doneText="Aceptar">
+        <span slot="title">Seleccione la hora</span>
+      </ion-datetime>
+    </ng-container>
+  </ng-template>
+</ion-modal>

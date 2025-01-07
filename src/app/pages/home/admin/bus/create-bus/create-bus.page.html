@@ -1,0 +1,87 @@
+<app-header [back]="true"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label>
+      Buses > {{title}}
+    </ion-label>
+  </ion-item>
+  <div class="d-flex-center">
+    <form
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+
+      <app-custom-input
+        icon="document"
+        autocomplete="plate"
+        [control]="form.controls.plate"
+        type="text"
+        label="Placa">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.plate.errors && form.controls.plate.touched">
+        <div *ngIf="form.controls.plate.errors?.['required']">La placa del bus es requerida</div>
+        <div *ngIf="form.controls.plate.errors?.['minlength']">Ingrese 8 caracteres</div>
+        <div *ngIf="form.controls.plate.errors?.['maxlength']">Ingrese 8 caracteres</div>
+      </div>
+
+      <app-custom-input
+        icon="folder"
+        autocomplete="chasis"
+        [control]="form.controls.chasis"
+        type="text"
+        label="Chasis">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.chasis.errors && form.controls.chasis.touched">
+        <div *ngIf="form.controls.chasis.errors?.['required']">El chasis del bus es requerido</div>
+        <div *ngIf="form.controls.chasis.errors?.['minlength']">Ingrese 16 caracteres</div>
+        <div *ngIf="form.controls.chasis.errors?.['maxlength']">Ingrese 16 caracteres</div>
+      </div>
+
+      <app-custom-input
+        icon="people"
+        autocomplete="seats"
+        [control]="form.controls.seats"
+        type="number"
+        label="Número de asientos">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.seats.errors && form.controls.seats.touched">
+        <div *ngIf="form.controls.seats.errors?.['required']">El número de asientos del bus es requerido</div>
+      </div>
+
+      <app-custom-input
+        icon="keypad"
+        autocomplete="floors"
+        [control]="form.controls.floors"
+        type="number"
+        label="Número de pisos">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.floors.errors && form.controls.floors.touched">
+        <div *ngIf="form.controls.floors.errors?.['required']">El número de pisos del bus es requerido</div>
+      </div>
+
+      <ion-select fill="outline" class="select" label="Socio" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)" [value]="selectedPartner">
+        <ion-select-option *ngFor="let p of partners" [value]="p">{{p.card}} - {{p.name}} {{p.lastName}}</ion-select-option>
+      </ion-select>
+
+      <!-- Botón para registrar o actualizar -->
+      <ion-button
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{bus ? 'Actualizar Bus' : 'Agregar Bus'}}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
