@@ -3,12 +3,20 @@ ion-item ion-card{
 }
 
 ion-thumbnail{
-    min-width: 40%;
-    height: 200px;
+    min-width: 30%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 ion-avatar{
-  border-radius: 50%
+    width: fit-content;
+    height: fit-content;
+}
+
+img{
+    border-radius: 50%;
 }
 .option-btn{
     color: white;

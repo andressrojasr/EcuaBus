@@ -3,6 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Frecuency } from 'src/app/models/frecuency.model';
 import { Stop } from 'src/app/models/stop.model';
 import { User } from 'src/app/models/user.model';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -16,7 +17,7 @@ export class CreateFrecuencyPage implements OnInit {
   
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
-  
+  secondaryFirebase = inject(FirebaseSecondaryService)
   frecuency: Frecuency
   stops: Stop[]=[]
   user = {} as User
@@ -99,11 +100,10 @@ export class CreateFrecuencyPage implements OnInit {
     const loading = await this.utils.loading();
     await loading.present();
 
-    // === Subir la imagen y obtener la url ===
-    // let dataUrl = this.form.value.photo;
-    // let imagePath = `${this.user.uidCooperative}/frecuencies/${Date.now()}`;
-    // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-    // this.form.controls.photo.setValue(imageUrl);
+    let dataUrl = this.form.value.document;
+        let imagePath = `ecuabus/${this.user.uidCooperative}/frecuencies/${Date.now()}`;
+        let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+        this.form.controls.document.setValue(imageUrl);
 
     delete this.form.value.id
 
@@ -143,9 +143,9 @@ export class CreateFrecuencyPage implements OnInit {
       try {
         if (this.form.value.document !== this.frecuency.document) {
           let dataUrl = this.form.value.document;
-          let imagePath = `${this.user.uidCooperative}/frecuencies/${Date.now()}`;
-          // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-          // this.formUpdate.controls.document.setValue(imageUrl);
+          let imagePath = `ecuabus/${this.user.uidCooperative}/frecuencies/${Date.now()}`;
+          let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+          this.form.controls.document.setValue(imageUrl);
         }
 
         await this.firebase.updateDocument(path, this.form.value);
@@ -157,6 +157,8 @@ export class CreateFrecuencyPage implements OnInit {
           position: 'middle',
           icon: 'checkmark-circle-outline',
         });
+        let pathImage = await this.secondaryFirebase.getFilePath(this.frecuency.document)
+        await this.secondaryFirebase.deleteFile(pathImage)
         this.utils.routerLink('/home/admin/frecuencies')
       } catch (error) {
         console.log(error);

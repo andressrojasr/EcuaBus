@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -14,9 +15,10 @@ export class CreateCollectorPage implements OnInit {
 
   collector:User
     
-      utils = inject(UtilsService)
-      firebase = inject(FirebaseService);
-      api = inject(AdminapiService)
+  utils = inject(UtilsService)
+  firebase = inject(FirebaseService);
+  api = inject(AdminapiService)
+  secondaryFirebase = inject(FirebaseSecondaryService)
     
       form= new FormGroup({
         uid: new FormControl(''),
@@ -79,8 +81,10 @@ export class CreateCollectorPage implements OnInit {
         if(this.collector){
           const loading = await this.utils.loading()
           await loading.present()
-          this.updateCollector().subscribe({
-            next: (response) => {
+          ;(await this.updateCollector()).subscribe({
+            next: async (response) => {
+              let pathImage = await this.secondaryFirebase.getFilePath(this.collector.photo)
+              await this.secondaryFirebase.deleteFile(pathImage)
               this.utils.showToast({
                 message: response.message,
                 duration: 1500,
@@ -99,8 +103,10 @@ export class CreateCollectorPage implements OnInit {
                 duration: 3000,
                 icon: 'alert-circle-outline'
               });
+              this.form.controls.photo.setValue(this.collector.photo);
               loading.dismiss();
-              console.error(error);
+            }, complete: () => {
+              loading.dismiss();
             }
           });
         }else{
@@ -116,7 +122,7 @@ export class CreateCollectorPage implements OnInit {
           }
           const loading = await this.utils.loading()
           await loading.present()
-          this.createUser().subscribe({
+          ;(await this.createUser()).subscribe({
             next: (response) => {
               this.utils.showToast({
                 message: response.message,
@@ -136,19 +142,20 @@ export class CreateCollectorPage implements OnInit {
                 duration: 3000,
                 icon: 'alert-circle-outline'
               });
+              this.form.controls.photo.setValue('');
               loading.dismiss();
-              console.error(error);
+            }, complete: () => {
+              loading.dismiss();
             }
           });
         }
       }
     
-      createUser() {
-        // === Subir la imagen y obtener la url ===
-        // let dataUrl = this.form.value.photo;
-        // let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
-        // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-        // this.form.controls.photo.setValue(imageUrl);
+      async createUser() {
+        let dataUrl = this.form.value.photo;
+        let imagePath = `ecuabus/${this.user.uidCooperative}/collectors/${Date.now()}`;
+        let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+        this.form.controls.photo.setValue(imageUrl);
         const userData = {
           email: this.form.controls.email.value,
           password: this.form.controls.password.value,
@@ -157,7 +164,7 @@ export class CreateCollectorPage implements OnInit {
           phone: this.form.controls.phone.value,
           address: this.form.controls.address.value,
           card: this.form.controls.card.value,
-          photo: "ads",
+          photo: this.form.controls.photo.value,
           isBlocked: false,
           rol: 'Cobrador',
         };
@@ -165,14 +172,13 @@ export class CreateCollectorPage implements OnInit {
       }
     
     
-      updateCollector() {
-          let path = `cooperatives/${this.user.uidCooperative}/drivers/${this.collector.uid}`;
-          //if (this.form.value.photo !== this.collector.photo) {
-              //let dataUrl = this.form.value.photo;
-              //let imagePath = `${this.user.uidCooperative}/drivers/${Date.now()}`;
-              // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-              // this.formUpdate.controls.photo.setValue(imageUrl);
-          //}
+      async updateCollector() {
+          if (this.form.value.photo !== this.collector.photo) {
+              let dataUrl = this.form.value.photo;
+              let imagePath = `ecuabus/${this.user.uidCooperative}/collectors/${Date.now()}`;
+              let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+              this.form.controls.photo.setValue(imageUrl);
+          }
           const userData: any = {     
             name: this.form.controls.name.value,
             lastName: this.form.controls.lastName.value,
