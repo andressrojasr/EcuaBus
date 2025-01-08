@@ -44,16 +44,57 @@
       </div>
 
       <app-custom-input
+        icon="bus"
+        autocomplete="model"
+        [control]="form.controls.model"
+        type="text"
+        label="Modelo">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.model.errors && form.controls.model.touched">
+        <div *ngIf="form.controls.model.errors?.['required']">El modelo del bus es requerido</div>
+        <div *ngIf="form.controls.model.errors?.['minlength']">Ingrese al menos 3 caracteres</div>
+      </div>
+
+      <app-custom-input
+        icon="bus"
+        autocomplete="brand"
+        [control]="form.controls.brand"
+        type="text"
+        label="Marca">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.brand.errors && form.controls.brand.touched">
+        <div *ngIf="form.controls.brand.errors?.['required']">La marca del bus es requerida</div>
+        <div *ngIf="form.controls.brand.errors?.['minlength']">Ingrese al menos 3 caracteres</div>
+      </div>
+
+      <app-custom-input
         icon="people"
         autocomplete="seats"
         [control]="form.controls.seats"
         type="number"
-        label="Número de asientos">
+        label="Número de asientos normales">
       </app-custom-input>
       <div
         class="validators"
         *ngIf="form.controls.seats.errors && form.controls.seats.touched">
-        <div *ngIf="form.controls.seats.errors?.['required']">El número de asientos del bus es requerido</div>
+        <div *ngIf="form.controls.seats.errors?.['required']">El número de asientos normales del bus es requerido</div>
+      </div>
+
+      <app-custom-input
+        icon="people"
+        autocomplete="seats"
+        [control]="form.controls.seatsVip"
+        type="number"
+        label="Número de asientos VIP">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.seatsVip.errors && form.controls.seatsVip.touched">
+        <div *ngIf="form.controls.seatsVip.errors?.['required']">El número de asientos VIP del bus es requerido</div>
       </div>
 
       <app-custom-input

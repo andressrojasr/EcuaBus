@@ -8,22 +8,30 @@
   <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterBuses()" placeholder="Buscar Bus"></ion-searchbar>
 
   <ion-grid *ngIf="!loading">
+    <!-- Encabezados -->
     <ion-row class="header-row">
       <ion-col size="2" class="header-cell">Placa</ion-col>
-      <ion-col size="3" class="header-cell">Chasis</ion-col>
-      <ion-col size="2" class="header-cell">Asientos</ion-col>
-      <ion-col size="2" class="header-cell">Pisos</ion-col>
+      <ion-col size="2" class="header-cell">Chasis</ion-col>
+      <ion-col size="1" class="header-cell">Modelo</ion-col>
+      <ion-col size="1" class="header-cell">Marca</ion-col>
+      <ion-col size="1" class="header-cell">Asientos</ion-col>
+      <ion-col size="1" class="header-cell">Asientos Vip</ion-col>
+      <ion-col size="1" class="header-cell">Pisos</ion-col>
       <ion-col size="3" class="header-cell">Dueño</ion-col>
     </ion-row>
 
+    <!-- Filas de datos -->
     <ion-item-sliding *ngFor="let p of filteredBuses">
       <ion-item>
         <ion-grid>
-          <ion-row>
+          <ion-row class="data-row">
             <ion-col size="2">{{ p.plate }}</ion-col>
-            <ion-col size="3">{{ p.chasis }}</ion-col>
-            <ion-col size="2">{{ p.seats }}</ion-col>
-            <ion-col size="2">{{ p.floors }}</ion-col>
+            <ion-col size="2">{{ p.chasis }}</ion-col>
+            <ion-col size="1">{{ p.model }}</ion-col>
+            <ion-col size="1">{{ p.brand }}</ion-col>
+            <ion-col size="1">{{ p.seats }}</ion-col>
+            <ion-col size="1">{{ p.seatsVip }}</ion-col>
+            <ion-col size="1">{{ p.floors }}</ion-col>
             <ion-col size="3">
               {{ p.partner?.card && p.partner?.name && p.partner?.lastName 
                  ? p.partner.card + " - " + p.partner.name + " " + p.partner.lastName 
@@ -33,13 +41,11 @@
         </ion-grid>
       </ion-item>
 
+      <!-- Opciones de sliding -->
       <ion-item-options side="end">
-        <!-- Editar -->
         <ion-item-option (click)="addUpdateBus(p)">
-          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          <ion-icon name="create-outline" slot="icon-only" class="option-btn"></ion-icon>
         </ion-item-option>
-
-        <!-- Eliminar -->
         <ion-item-option color="danger" (click)="confirmDeleteBus(p)">
           <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
         </ion-item-option>
@@ -47,7 +53,7 @@
     </ion-item-sliding>
   </ion-grid>
 
-  <!-- ====== Cuando no hay productos disponibles ====== -->
+  <!-- Mensaje cuando no hay resultados -->
   <div *ngIf="!loading && !filteredBuses.length" class="empty">
     <ion-icon name="shield-outline"></ion-icon>
     <h3>No hay buses disponibles</h3>

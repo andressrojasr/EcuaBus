@@ -28,7 +28,10 @@ export class CreateBusPage implements OnInit {
     id: new FormControl(''),
     plate: new FormControl('',[Validators.required, Validators.minLength(8), Validators.maxLength(8)]),
     chasis: new FormControl('',[Validators.required, Validators.minLength(16), Validators.maxLength(16)]),
+    model: new FormControl('',[Validators.required, Validators.minLength(3)]),
+    brand: new FormControl('',[Validators.required, Validators.minLength(3)]),
     seats: new FormControl(0,[Validators.required]),
+    seatsVip: new FormControl(0,[Validators.required]),
     floors: new FormControl('',[Validators.required]),
     idPartner: new FormControl('', [Validators.required]),
     partner: new FormControl(null)
@@ -47,7 +50,10 @@ export class CreateBusPage implements OnInit {
         id: this.bus.id,
         plate: this.bus.plate,
         chasis: this.bus.chasis,
+        model: this.bus.model,
+        brand: this.bus.brand,
         seats: this.bus.seats,
+        seatsVip: this.bus.seatsVip,
         floors: this.bus.floors,
         idPartner: this.bus.idPartner,
         partner: this.bus.partner || null // Asegúrate de que partner sea opcional

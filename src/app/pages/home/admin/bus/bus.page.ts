@@ -128,7 +128,9 @@ export class BusPage{
           bus.partner.card.toLowerCase().includes(searchTerm) ||
           bus.plate.toLowerCase().includes(searchTerm) ||
           bus.partner.name.toLowerCase().includes(searchTerm)||
-          complete.toLowerCase().includes(searchTerm)
+          complete.toLowerCase().includes(searchTerm) ||
+          bus.brand.toLowerCase().includes(searchTerm) ||
+          bus.model.toLowerCase().includes(searchTerm)
         );
       });
     }

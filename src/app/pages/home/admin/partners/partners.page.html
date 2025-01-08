@@ -7,56 +7,44 @@
     </ion-label>
   </ion-item>
   <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterPartners()" placeholder="Buscar Socio" animated="true"></ion-searchbar>
-  <ion-list *ngIf="!loading">
-    <ion-item-sliding class="product-item" *ngFor="let p of filteredPartners">
-      <ion-item>
-        <ion-card mode="ios">
-          <ion-card-header>
-            <ion-card-title>{{p.name}} {{p.lastName}}</ion-card-title>
-            <ion-card-subtitle>Socio</ion-card-subtitle>
-          </ion-card-header>
+  
+  <ion-grid *ngIf="!loading">
+    <!-- Encabezados -->
+    <ion-row class="header-row">
+      <ion-col size="2" class="header-cell">Cédula</ion-col>
+      <ion-col size="2" class="header-cell">Nombre</ion-col>
+      <ion-col size="2" class="header-cell">Apellido</ion-col>
+      <ion-col size="2" class="header-cell">Dirección</ion-col>
+      <ion-col size="2" class="header-cell">Email</ion-col>
+      <ion-col size="2" class="header-cell">Teléfono</ion-col>
+    </ion-row>
 
-          <ion-card-content>
-            <ion-item lines="none" class="item">
-              <ion-thumbnail slot="start">
-                <ion-avatar aria-hidden="true" slot="start">
-                  <img alt="Foto del socio" [src]="p.photo" />
-                </ion-avatar>
-              </ion-thumbnail>
-              <ion-list >
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Número de Cédula: {{p.card}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Dirección: {{p.address}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Email: {{p.email}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Teléfono: {{p.card}}</ion-label>
-                </ion-item>
-              </ion-list>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
+    <!-- Filas de datos -->
+    <ion-item-sliding *ngFor="let p of filteredPartners">
+      <ion-item>
+        <ion-grid>
+          <ion-row class="data-row">
+            <ion-col size="2">{{ p.card }}</ion-col>
+            <ion-col size="2">{{ p.name }}</ion-col>
+            <ion-col size="2">{{ p.lastName}}</ion-col>
+            <ion-col size="2">{{ p.address }}</ion-col>
+            <ion-col size="2">{{ p.email }}</ion-col>
+            <ion-col size="2">{{ p.phone }}</ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-item>
 
-      <!-- ===== Opciones para cada producto ===== -->
-      <ion-item-options>
-        <!-- Editar -->
-        <ion-item-option (click)="addUpdatePartner(p)">
-          <ion-icon class="option-btn" name="create-outline"></ion-icon>
+      <!-- Opciones de sliding -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="addUpdatePartner(p)" >
+          <ion-icon name="create-outline" slot="icon-only" class="option-btn"></ion-icon>
         </ion-item-option>
-
-        <!-- Eliminar -->
-        <ion-item-option (click)="confirmDeletePartner(p)" color="danger">
-          <ion-icon class="option-btn" name="trash-outline"></ion-icon>
+        <ion-item-option color="danger" (click)="confirmDeletePartner(p)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
         </ion-item-option>
-
       </ion-item-options>
     </ion-item-sliding>
-  </ion-list>
+  </ion-grid>
 
    <!-- ====== Cuando no hay productos disponibles ====== -->
    <div *ngIf="!loading && !filteredPartners.length" class="empty">
