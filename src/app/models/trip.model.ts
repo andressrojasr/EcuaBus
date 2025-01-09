@@ -10,4 +10,5 @@ export interface Trip{
     priceVip: number;
     status: string;
     date: Date;
+    seatMap: any[];
 }

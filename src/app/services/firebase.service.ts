@@ -118,6 +118,11 @@ export class FirebaseService {
     return deleteDoc(doc(getFirestore(),path))
   }
 
+  async deleteCollection(path:string)
+  {
+    return this.deleteCollection(path)
+  }
+
   async getFilePath(url:string)
   {
     return ref(getStorage(),url).fullPath

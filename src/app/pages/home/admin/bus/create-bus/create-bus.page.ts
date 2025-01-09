@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { orderBy } from 'firebase/firestore';
@@ -25,6 +26,7 @@ export class CreateBusPage implements OnInit {
 
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
+  router = inject(Router)
 
   form = new FormGroup({
     id: new FormControl(''),
@@ -122,8 +124,8 @@ export class CreateBusPage implements OnInit {
       await loading.present();
       try {
         delete this.form.value.partner
-        if(this.bus.seats!= this.form.controls.seats.value || this.bus.seatsVip != this.form.controls.seatsVip.value){
-          await this.firebase.deleteDocument(`cooperatives/${this.user.uidCooperative}/buses/${this.bus.id}/seats`)
+        if(this.bus.seats!= this.form.controls.seats.value || this.bus.seatsVip != this.form.controls.seatsVip.value || this.bus.floors != this.form.controls.floors.value){
+          this.firebase.deleteCollection(`cooperatives/${this.user.uidCooperative}/buses/${this.bus.id}/seats`)
           await this.createAndSaveSeats(this.bus.id)
         }
         await this.firebase.updateDocument(path, this.form.value);
@@ -169,26 +171,59 @@ export class CreateBusPage implements OnInit {
       this.form.controls.idPartner.setValue(event.detail.value.id)
     }
 
-    async createAndSaveSeats(id: string){
+    selectOnChangeFloor(event:any){
+      this.form.controls.floors.setValue(event.detail.value)
+    }
 
+    async createAndSaveSeats(id: string) {
       this.seatObjects = [];
-
+    
+      // Posición inicial para el primer asiento
+      let initialTop = 20; // Espaciado desde la parte superior
+      let initialLeft = 20; // Espaciado desde el lado izquierdo
+      const seatWidth = 50; // Ancho de cada asiento
+      const seatHeight = 50; // Altura de cada asiento
+      const seatsPerRow = 4; // Número de asientos por fila
+    
+      // Generar asientos VIP
       for (let i = 1; i <= this.form.controls.seatsVip.value; i++) {
+        const row = Math.floor((i - 1) / seatsPerRow);
+        const column = (i - 1) % seatsPerRow;
+        let floor = 1
+        if(Number(this.form.controls.floors.value)>1){
+          floor = Number(this.form.controls.floors.value)
+        }
         this.seatObjects.push({
           category: 'VIP',
           number: i,
           status: 'Disponible',
+          position: {
+            top: initialTop + row * seatHeight,
+            left: initialLeft + column * seatWidth,
+          },
+          floor:floor
         });
       }
-  
+    
       // Generar asientos normales
       for (let i = 1; i <= this.form.controls.seats.value; i++) {
+        const seatIndex = i + Number(this.form.controls.seatsVip.value);
+        const row = Math.floor((seatIndex - 1) / seatsPerRow);
+        const column = (seatIndex - 1) % seatsPerRow;
+    
         this.seatObjects.push({
           category: 'Normal',
-          number: i + Number(this.form.controls.seatsVip.value), // Número consecutivo después de VIP
+          number: seatIndex,
           status: 'Disponible',
+          position: {
+            top: initialTop + row * seatHeight,
+            left: initialLeft + column * seatWidth,
+          },
+          floor:1
         });
       }
+    
+      // Guardar los asientos en Firebase
       for (const seat of this.seatObjects) {
         await this.firebase.addSubcollectionDocument(
           'cooperatives', // Colección principal
@@ -199,5 +234,10 @@ export class CreateBusPage implements OnInit {
           seat // Objeto del asiento
         );
       }
+    }
+    
+
+    configBus(){
+      this.router.navigate(['/home/admin/bus/create-bus/bus-map'], { state: { bus: this.bus } });
     }
 }

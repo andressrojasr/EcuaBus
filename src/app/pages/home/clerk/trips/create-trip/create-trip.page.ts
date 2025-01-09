@@ -39,6 +39,7 @@ export class CreateTripPage implements OnInit {
       priceVip: new FormControl(0, [Validators.required]),
       date: new FormControl(null, [Validators.required]),
       status: new FormControl('Activo', [Validators.required]),
+      seatMap: new FormControl([], [Validators.required]),
     })
   
     
@@ -64,6 +65,8 @@ export class CreateTripPage implements OnInit {
           price: this.trip.price,
           priceVip: this.trip.priceVip,
           status: this.trip.status,
+          seatMap: this.trip.seatMap,
+          date: this.trip.date
         });
         this.title="Actualizar Viaje"
       }else{
@@ -97,7 +100,7 @@ export class CreateTripPage implements OnInit {
       await loading.present();
   
       delete this.form.value.id
-  
+      
       this.firebase.addDocument(path, this.form.value).then(async res => {    
         const tripId = res.id;
         await this.firebase.updateDocument(`${path}/${tripId}`, { id: tripId });
@@ -179,10 +182,11 @@ export class CreateTripPage implements OnInit {
         })
       }
   
-  selectOnChangeBus(event:any){
+  async selectOnChangeBus(event:any){
         this.form.controls.idbus.setValue(event.detail.value.id)
         this.form.controls.seats.setValue(event.detail.value.seats)
         this.form.controls.seatsVip.setValue(event.detail.value.seatsVip)
+        await this.getSeats()
   }
 
   async getDrivers() {
@@ -196,8 +200,21 @@ export class CreateTripPage implements OnInit {
     })
   }
 
-  async selectOnChangeDriver(event:any){
+  selectOnChangeDriver(event:any){
     this.form.controls.idconductor.setValue(event.detail.value.id)
+    
+  }
+
+  async getSeats() {
+    const user: User = this.utils.getFromLocalStorage('user');
+    const path = `cooperatives/${user.uidCooperative}/buses/${this.form.controls.idbus.value}/seats`;
+
+    this.firebase.getCollectionData(path).subscribe({
+      next: (res: any[]) => {
+        this.form.controls.seatMap.setValue(res)
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   async getCollectors() {
