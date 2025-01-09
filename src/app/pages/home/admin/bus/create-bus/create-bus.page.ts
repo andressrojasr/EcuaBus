@@ -21,6 +21,8 @@ export class CreateBusPage implements OnInit {
   loading:boolean = false
   selectedPartner: Partner
 
+  seatObjects = [] 
+
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
 
@@ -90,7 +92,7 @@ export class CreateBusPage implements OnInit {
 
     // Actualizamos el documento con la ID generada
     await this.firebase.updateDocument(`${path}/${busId}`, { id: busId });
-
+    await this.createAndSaveSeats(busId);
       this.utils.showToast({
         message: 'Bus creado exitosamente',
         duration: 1500,
@@ -100,8 +102,6 @@ export class CreateBusPage implements OnInit {
       })
 
     }).catch(error => {
-      console.log(error);
-
       this.utils.showToast({
         message: error.message,
         duration: 2500,
@@ -120,9 +120,12 @@ export class CreateBusPage implements OnInit {
 
       const loading = await this.utils.loading();
       await loading.present();
-
       try {
         delete this.form.value.partner
+        if(this.bus.seats!= this.form.controls.seats.value || this.bus.seatsVip != this.form.controls.seatsVip.value){
+          await this.firebase.deleteDocument(`cooperatives/${this.user.uidCooperative}/buses/${this.bus.id}/seats`)
+          await this.createAndSaveSeats(this.bus.id)
+        }
         await this.firebase.updateDocument(path, this.form.value);
 
         this.utils.showToast({
@@ -133,8 +136,6 @@ export class CreateBusPage implements OnInit {
           icon: 'checkmark-circle-outline',
         });
       } catch (error) {
-        console.log(error);
-
         this.utils.showToast({
           message: error.message,
           duration: 2500,
@@ -166,7 +167,37 @@ export class CreateBusPage implements OnInit {
 
     selectOnChange(event:any){
       this.form.controls.idPartner.setValue(event.detail.value.id)
-      console.log(this.form.controls)
     }
 
+    async createAndSaveSeats(id: string){
+
+      this.seatObjects = [];
+
+      for (let i = 1; i <= this.form.controls.seatsVip.value; i++) {
+        this.seatObjects.push({
+          category: 'VIP',
+          number: i,
+          status: 'Disponible',
+        });
+      }
+  
+      // Generar asientos normales
+      for (let i = 1; i <= this.form.controls.seats.value; i++) {
+        this.seatObjects.push({
+          category: 'Normal',
+          number: i + Number(this.form.controls.seatsVip.value), // Número consecutivo después de VIP
+          status: 'Disponible',
+        });
+      }
+      for (const seat of this.seatObjects) {
+        await this.firebase.addSubcollectionDocument(
+          'cooperatives', // Colección principal
+          this.user.uidCooperative, // ID del documento cooperativa
+          'buses', // Subcolección buses
+          id, // ID del bus
+          'seats', // Subcolección seats
+          seat // Objeto del asiento
+        );
+      }
+    }
 }

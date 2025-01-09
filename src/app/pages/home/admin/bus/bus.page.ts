@@ -105,7 +105,7 @@ export class BusPage{
       });
     } catch (error) {
       this.utils.showToast({
-        message:"Ha ocurrido un error",
+        message:error.message,
         duration: 2500,
         color: 'primary',
         position: 'middle',

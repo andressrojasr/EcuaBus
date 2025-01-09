@@ -4,5 +4,10 @@ export interface Trip{
     idcobrador: string;
     idconductor: string;
     idfrec: string;
-    seats: number
+    seats: number;
+    seatsVip: number;
+    price: number;
+    priceVip: number;
+    status: string;
+    date: Date;
 }

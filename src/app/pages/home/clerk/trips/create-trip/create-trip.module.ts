@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TripsPageRoutingModule } from './trips-routing.module';
+import { CreateTripPageRoutingModule } from './create-trip-routing.module';
 
-import { TripsPage } from './trips.page';
+import { CreateTripPage } from './create-trip.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -16,8 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ReactiveFormsModule,
     SharedModule,
     IonicModule,
-    TripsPageRoutingModule
+    CreateTripPageRoutingModule
   ],
-  declarations: [TripsPage]
+  declarations: [CreateTripPage]
 })
-export class TripsPageModule {}
+export class CreateTripPageModule {}

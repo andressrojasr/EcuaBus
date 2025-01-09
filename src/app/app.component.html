@@ -9,30 +9,60 @@
               <ion-label class="title" color="primary">Administrador<br>EcuaBus</ion-label>
             </ion-item>
           </ion-list-header>
-          <ng-container *ngIf="user.rol === 'Administrador'" >
-            <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-              <ion-item  [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
+          <ng-container *ngIf="user.rol === 'Administrador'" > 
+              <ion-accordion-group [value]="'0'">
+                <ion-accordion [value]="i" *ngFor="let p of appPages; let i = index">
+                  <ion-item slot="header" color="light">
+                    <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                    <ion-label>{{p.title}}</ion-label>
+                  </ion-item>
+                  <div class="ion-padding" slot="content">
+                    <ion-menu-toggle auto-hide="false" *ngFor="let link of p.children; let i = index">
+                      <ion-item  [routerLink]="[link.url]" lines="none" detail="false" routerLinkActive="selected">
+                        <ion-icon aria-hidden="true" slot="start" [ios]="link.icon + '-outline'" [md]="link.icon + '-sharp'"></ion-icon>
+                        <ion-label>{{ link.title }}</ion-label>
+                      </ion-item>
+                    </ion-menu-toggle>
+                  </div>
+                </ion-accordion>
+              </ion-accordion-group>
           </ng-container>
-          <ng-container *ngIf="user.rol === 'Taquillero'">
-            <ion-menu-toggle auto-hide="false" *ngFor="let p of taquilleros; let i = index">
-              <ion-item  [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+          <ng-container *ngIf="user.rol === 'Taquillero'" > 
+            <ion-accordion-group [value]="'0'">
+              <ion-accordion [value]="i" *ngFor="let p of taquilleros; let i = index">
+                <ion-item slot="header" color="light">
+                  <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                  <ion-label>{{p.title}}</ion-label>
+                </ion-item>
+                <div class="ion-padding" slot="content">
+                  <ion-menu-toggle auto-hide="false" *ngFor="let link of p.children; let i = index">
+                    <ion-item  [routerLink]="[link.url]" lines="none" detail="false" routerLinkActive="selected">
+                      <ion-icon aria-hidden="true" slot="start" [ios]="link.icon + '-outline'" [md]="link.icon + '-sharp'"></ion-icon>
+                      <ion-label>{{ link.title }}</ion-label>
+                    </ion-item>
+                  </ion-menu-toggle>
+                </div>
+              </ion-accordion>
+            </ion-accordion-group>
+        </ng-container>
+        <ng-container *ngIf="user.rol === 'Oficinista'" > 
+          <ion-accordion-group [value]="'0'">
+            <ion-accordion [value]="i" *ngFor="let p of clerks; let i = index">
+              <ion-item slot="header" color="light">
                 <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
+                <ion-label>{{p.title}}</ion-label>
               </ion-item>
-            </ion-menu-toggle>
-          </ng-container>
-          <ng-container *ngIf="user.rol === 'Oficinista'">
-            <ion-menu-toggle auto-hide="false" *ngFor="let p of clerks; let i = index">
-              <ion-item  [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          </ng-container>
+              <div class="ion-padding" slot="content">
+                <ion-menu-toggle auto-hide="false" *ngFor="let link of p.children; let i = index">
+                  <ion-item  [routerLink]="[link.url]" lines="none" detail="false" routerLinkActive="selected">
+                    <ion-icon aria-hidden="true" slot="start" [ios]="link.icon + '-outline'" [md]="link.icon + '-sharp'"></ion-icon>
+                    <ion-label>{{ link.title }}</ion-label>
+                  </ion-item>
+                </ion-menu-toggle>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+      </ng-container>
           <ion-footer>
             <ion-item lines="none">
               <ion-avatar  class="photoUser">

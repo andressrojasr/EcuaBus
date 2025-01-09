@@ -6,6 +6,7 @@ export interface Frecuency{
     destiny: string;
     stops: Stop[];
     price:number;
+    priceVip:number;
     document:string;
     timeStart: Date;
     timeEnd: Date;

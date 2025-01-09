@@ -1,0 +1,67 @@
+<app-header [back]="true"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label>
+      Frecuencias > {{title}}
+    </ion-label>
+  </ion-item>
+  <div class="d-flex-center">
+    <form
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+
+      <ion-select *ngIf="!trip" fill="outline" class="select" label="Frecuencia" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeFrecuency($event)">
+        <ion-select-option *ngFor="let p of frecuencies" [value]="p">{{p.id}} | {{p.origin}} - {{p.destiny}} | {{p.timeStart}}</ion-select-option>
+      </ion-select>
+
+      <ion-select fill="outline" class="select" label="Bus" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeBus($event)">
+        <ion-select-option *ngFor="let p of buses" [value]="p">{{p.plate}} | Asientos: {{p.seats}} - Asientos Vip: {{p.seatsVip}}</ion-select-option>
+      </ion-select>
+
+      <ion-select fill="outline" class="select" label="Conductor" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeDriver($event)">
+        <ion-select-option *ngFor="let p of drivers" [value]="p">{{p.card}} | {{p.name}} - {{p.lastName}}</ion-select-option>
+      </ion-select>
+
+      <ion-select fill="outline" class="select" label="Cobrador" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeCollector($event)">
+        <ion-select-option *ngFor="let p of collectors" [value]="p">{{p.card}} | {{p.name}} - {{p.lastName}}</ion-select-option>
+      </ion-select>
+
+
+      <ion-datetime-button datetime="datetim"></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="datetim"
+          [value]="trip ? trip.date : null"
+          presentation="date"
+          (ionChange)="onDateTimeChange($event)"
+          [formatOptions]="{
+            date: {
+              weekday: 'short',
+              month: 'long',
+              day: '2-digit',
+            },
+          }"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+
+      <ion-select *ngIf="trip" fill="outline" class="select" label="Estado" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeStatus($event)">
+        <ion-select-option value="Activo">Activo</ion-select-option>
+        <ion-select-option value="En curso">En Curso</ion-select-option>
+        <ion-select-option value="Finalizado">Finalizado</ion-select-option>
+      </ion-select>
+    
+      <ion-button
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{ trip ? 'Actualizar Viaje' : 'Agregar Viaje' }}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

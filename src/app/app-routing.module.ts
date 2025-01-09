@@ -27,6 +27,7 @@ const routes: Routes = [
     path: '**', // Ruta comodín para manejar rutas no encontradas
     redirectTo: '/not-found', // Redirige a la página 404
   },
+
 ];
 
 @NgModule({

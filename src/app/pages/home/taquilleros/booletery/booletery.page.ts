@@ -71,7 +71,8 @@ export class BooleteryPage{
         this.filteredTrips = this.trips.filter(trip => {
           return (
             trip.origin.toLowerCase().includes(searchTerm) ||
-            trip.destiny.toLowerCase().includes(searchTerm) 
+            trip.destiny.toLowerCase().includes(searchTerm) ||
+            trip.timeStart.toLowerCase().includes(searchTerm)
           );
         });
       }

@@ -164,4 +164,14 @@ export class FirebaseService {
         localStorage.setItem('cooperative', JSON.stringify(cooperative));
       });
   }
+
+  addSubcollectionDocument(collection: string, documentId: string, subcollection: string, idBus: any, seats: any, data: any) {
+    return this.firestore
+      .collection(collection)
+      .doc(documentId)
+      .collection(subcollection)
+      .doc(idBus)
+      .collection(seats)
+      .add(data);
+  }
 }

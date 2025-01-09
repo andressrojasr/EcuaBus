@@ -32,6 +32,7 @@ export class CreateFrecuencyPage implements OnInit {
     destiny: new FormControl('', [Validators.required, Validators.minLength(2)]),
     stops: new FormArray([]),
     price: new FormControl(0, [Validators.required]),
+    priceVip: new FormControl(0, [Validators.required]),
     document: new FormControl('', [Validators.required]),
     timeStart: new FormControl(null,[Validators.required]),
     timeEnd: new FormControl(null,[Validators.required]),
@@ -53,6 +54,7 @@ export class CreateFrecuencyPage implements OnInit {
         destiny: this.frecuency.destiny,
         stops: this.frecuency.stops,
         price: this.frecuency.price,
+        priceVip: this.frecuency.priceVip,
         document: this.frecuency.document,
         time: this.frecuency.time,
         timeStart: this.frecuency.timeStart,
@@ -61,7 +63,7 @@ export class CreateFrecuencyPage implements OnInit {
       });
       if (this.frecuency.stops) {
         this.frecuency.stops.forEach((stop) => {
-          this.addStop(stop.name, stop.price);
+          this.addStop(stop.name, stop.price, stop.priceVip);
         });
       }
       this.title="Actualizar frecuencia"
@@ -175,10 +177,11 @@ export class CreateFrecuencyPage implements OnInit {
       }
     }
 
-    addStop(name: string = '', price: number = 0) {
+    addStop(name: string = '', price: number = 0, priceVip: number = 0) {
       const stopGroup = new FormGroup({
         name: new FormControl(name, [Validators.required]),
         price: new FormControl(price, [Validators.required, Validators.min(0)]),
+        priceVip: new FormControl(price, [Validators.required, Validators.min(0)]),
       });
       this.stopsArray.push(stopGroup);
     }
