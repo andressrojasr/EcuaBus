@@ -12,18 +12,7 @@
       (ngSubmit)="submit()"
       [formGroup]="form"
       (keypres.enter)="submit()">
-
-      <ion-avatar *ngIf="form.value.photo">
-        <img [src]="form.value.photo" />
-      </ion-avatar>
-      <!-- Si existe o no imagen -->
-      <ion-icon class="image-icon" *ngIf="!form.value.photo" name="image-outline"></ion-icon>
-      <br>
-      <!-- botón para tomar imagen -->
-      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
-        Seleccionar imagen
-      </ion-button>
-
+      
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
