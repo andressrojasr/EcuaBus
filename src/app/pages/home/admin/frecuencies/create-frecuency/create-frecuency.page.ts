@@ -3,6 +3,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Frecuency } from 'src/app/models/frecuency.model';
 import { Stop } from 'src/app/models/stop.model';
 import { User } from 'src/app/models/user.model';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -16,7 +17,7 @@ export class CreateFrecuencyPage implements OnInit {
   
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
-  
+  secondaryFirebase = inject(FirebaseSecondaryService)
   frecuency: Frecuency
   stops: Stop[]=[]
   user = {} as User
@@ -31,6 +32,7 @@ export class CreateFrecuencyPage implements OnInit {
     destiny: new FormControl('', [Validators.required, Validators.minLength(2)]),
     stops: new FormArray([]),
     price: new FormControl(0, [Validators.required]),
+    priceVip: new FormControl(0, [Validators.required]),
     document: new FormControl('', [Validators.required]),
     timeStart: new FormControl(null,[Validators.required]),
     timeEnd: new FormControl(null,[Validators.required]),
@@ -52,6 +54,7 @@ export class CreateFrecuencyPage implements OnInit {
         destiny: this.frecuency.destiny,
         stops: this.frecuency.stops,
         price: this.frecuency.price,
+        priceVip: this.frecuency.priceVip,
         document: this.frecuency.document,
         time: this.frecuency.time,
         timeStart: this.frecuency.timeStart,
@@ -60,7 +63,7 @@ export class CreateFrecuencyPage implements OnInit {
       });
       if (this.frecuency.stops) {
         this.frecuency.stops.forEach((stop) => {
-          this.addStop(stop.name, stop.price);
+          this.addStop(stop.name, stop.price, stop.priceVip);
         });
       }
       this.title="Actualizar frecuencia"
@@ -99,11 +102,10 @@ export class CreateFrecuencyPage implements OnInit {
     const loading = await this.utils.loading();
     await loading.present();
 
-    // === Subir la imagen y obtener la url ===
-    // let dataUrl = this.form.value.photo;
-    // let imagePath = `${this.user.uidCooperative}/frecuencies/${Date.now()}`;
-    // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-    // this.form.controls.photo.setValue(imageUrl);
+    let dataUrl = this.form.value.document;
+        let imagePath = `ecuabus/${this.user.uidCooperative}/frecuencies/${Date.now()}`;
+        let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+        this.form.controls.document.setValue(imageUrl);
 
     delete this.form.value.id
 
@@ -143,9 +145,9 @@ export class CreateFrecuencyPage implements OnInit {
       try {
         if (this.form.value.document !== this.frecuency.document) {
           let dataUrl = this.form.value.document;
-          let imagePath = `${this.user.uidCooperative}/frecuencies/${Date.now()}`;
-          // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-          // this.formUpdate.controls.document.setValue(imageUrl);
+          let imagePath = `ecuabus/${this.user.uidCooperative}/frecuencies/${Date.now()}`;
+          let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+          this.form.controls.document.setValue(imageUrl);
         }
 
         await this.firebase.updateDocument(path, this.form.value);
@@ -157,6 +159,8 @@ export class CreateFrecuencyPage implements OnInit {
           position: 'middle',
           icon: 'checkmark-circle-outline',
         });
+        let pathImage = await this.secondaryFirebase.getFilePath(this.frecuency.document)
+        await this.secondaryFirebase.deleteFile(pathImage)
         this.utils.routerLink('/home/admin/frecuencies')
       } catch (error) {
         console.log(error);
@@ -173,10 +177,11 @@ export class CreateFrecuencyPage implements OnInit {
       }
     }
 
-    addStop(name: string = '', price: number = 0) {
+    addStop(name: string = '', price: number = 0, priceVip: number = 0) {
       const stopGroup = new FormGroup({
         name: new FormControl(name, [Validators.required]),
         price: new FormControl(price, [Validators.required, Validators.min(0)]),
+        priceVip: new FormControl(price, [Validators.required, Validators.min(0)]),
       });
       this.stopsArray.push(stopGroup);
     }

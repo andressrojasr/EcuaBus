@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { orderBy } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -16,6 +17,7 @@ export class ClerksPage {
   utils = inject(UtilsService)
   firebase = inject(FirebaseService)
   router = inject(Router)
+  secondaryFirebase= inject(FirebaseSecondaryService)
   api = inject(AdminapiService)
   clerks: User[] = []
   filteredClerks: User[]=[]
@@ -179,8 +181,10 @@ export class ClerksPage {
   async deleteClerk(clerk: User) {
     const loading = await this.utils.loading()
     await loading.present()
+    let pathImage = await this.secondaryFirebase.getFilePath(clerk.photo)
     this.api.deleteUser(clerk.uid, clerk.uidCooperative, 'clerks').subscribe({
-      next: () => {
+      next: async () => {
+        await this.secondaryFirebase.deleteFile(pathImage)
         this.utils.showToast({
           message: 'Oficinista eliminado exitosamente',
           duration: 1500,

@@ -25,7 +25,6 @@ export class CreatePartnerPage implements OnInit {
     address: new FormControl('',[Validators.required]),
     email: new FormControl('',[Validators.required, Validators.email]),
     phone: new FormControl('',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
-    photo : new FormControl('',Validators.required)
   }
 )
 
@@ -47,12 +46,6 @@ export class CreatePartnerPage implements OnInit {
     }
   }
 
-  async takeImage()
-  {
-    const dataUrl = ( await this.utils.takePicture('Foto del socio')).dataUrl
-    this.form.controls.photo.setValue(dataUrl)
-  }
-
   submit()
   {
     if (this.form.valid) {
@@ -68,12 +61,6 @@ export class CreatePartnerPage implements OnInit {
 
     const loading = await this.utils.loading();
     await loading.present();
-
-    // === Subir la imagen y obtener la url ===
-    // let dataUrl = this.form.value.photo;
-    // let imagePath = `${this.user.uidCooperative}/${Date.now()}`;
-    // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-    // this.form.controls.photo.setValue(imageUrl);
 
     delete this.form.value.id
 
@@ -110,13 +97,6 @@ export class CreatePartnerPage implements OnInit {
       await loading.present();
 
       try {
-        if (this.form.value.photo !== this.partner.photo) {
-          let dataUrl = this.form.value.photo;
-          let imagePath = `${this.user.uidCooperative}/${Date.now()}`;
-          // let imageUrl = await this.firebase.uploadImage(imagePath, dataUrl);
-          // this.form.controls.photo.setValue(imageUrl);
-        }
-
         await this.firebase.updateDocument(path, this.form.value);
 
         this.utils.showToast({

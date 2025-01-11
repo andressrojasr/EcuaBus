@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { orderBy, where } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -17,6 +18,7 @@ export class DriversPage {
   firebase = inject(FirebaseService)
   router = inject(Router)
   api = inject(AdminapiService)
+  secondaryFirebase = inject(FirebaseSecondaryService)
   drivers: User[] = []
   filteredDrivers: User[]=[]
   searchTerm: string = '';
@@ -179,8 +181,10 @@ export class DriversPage {
   async deleteDriver(driver: User) {
     const loading = await this.utils.loading()
     await loading.present()
+    let pathImage = await this.secondaryFirebase.getFilePath(driver.photo)
     this.api.deleteUser(driver.uid, driver.uidCooperative, 'drivers').subscribe({
-      next: () => {
+      next: async () => {
+        await this.secondaryFirebase.deleteFile(pathImage)
         this.utils.showToast({
           message: 'Conductor eliminado exitosamente',
           duration: 1500,

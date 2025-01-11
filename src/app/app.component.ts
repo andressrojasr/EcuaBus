@@ -17,25 +17,57 @@ export class AppComponent implements OnInit {
   user: User | null = null;
   
   public appPages = [
-    { title: 'Buses', url: 'home/admin/bus', icon: 'train' },
-    { title: 'Conductores', url: 'home/admin/drivers', icon: 'people' },
-    { title: 'Oficinistas', url: 'home/admin/clerks', icon: 'briefcase' },
-    { title: 'Taquilleros', url: 'home/admin/taquilleros', icon: 'cash' },
-    { title: 'Cobradores', url: 'home/admin/collector', icon: 'person' },
-    { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
-    { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
-    { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
-    { title: 'Perfil', url: 'home/admin/edit-profile', icon: 'settings' },
-    { title: 'Reportar Errores', url: 'home/admin/errors', icon: 'bug' },
+    {
+      title: 'Frecuencias y Buses',
+      icon: 'bus',
+      children: [
+        { title: 'Buses', url: 'home/admin/bus', icon: 'train' },
+        { title: 'Frecuencias', url: 'home/admin/frecuencies', icon: 'git-branch' },
+        { title: 'Socios', url: 'home/admin/partners', icon: 'people' },
+      ],
+    },
+    {
+      title: 'Usuarios',
+      icon: 'people',
+      children: [
+        { title: 'Conductores', url: 'home/admin/drivers', icon: 'person' },
+        { title: 'Oficinistas', url: 'home/admin/clerks', icon: 'briefcase' },
+        { title: 'Cobradores', url: 'home/admin/collector', icon: 'cash' },
+        { title: 'Taquilleros', url: 'home/admin/taquilleros', icon: 'card' },
+      ],
+    },
+    {
+      title: 'Configuración',
+      icon: 'settings',
+      children: [
+        { title: 'Cooperativa', url: 'home/admin/cooperative', icon: 'business' },
+        { title: 'Perfil', url: 'home/admin/edit-profile', icon: 'settings' },
+        { title: 'Reportar Errores', url: 'home/admin/errors', icon: 'bug' },
+      ],
+    },
+    
   ];
 
   public taquilleros = [
-    { title: 'Booleteria', url: 'home/taquilleros/booletery', icon: 'cash' },
-    { title: 'Conductores', url: 'home/taquilleros/tickets', icon: 'pricetag' },
+    {
+      title: 'Venta y Busqueda de Boletos',
+      icon: 'cash',
+      children: [
+        { title: 'Booleteria', url: 'home/taquilleros/booletery', icon: 'cash' },
+        { title: 'Boletos', url: 'home/taquilleros/tickets', icon: 'pricetag' },
+      ],
+    },
   ]
 
   public clerks = [
-    { title: 'Viajes', url: 'home/clerk/trips', icon: 'cash' },
+    {
+      title: 'Gestión de Viajes',
+      icon: 'cash',
+      children: [
+        { title: 'Viajes', url: 'home/clerk/trips', icon: 'cash' },
+      ],
+    },
+    
   ]
 
   ngOnInit(): void {

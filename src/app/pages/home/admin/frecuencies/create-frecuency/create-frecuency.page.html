@@ -48,6 +48,10 @@
             <ion-label position="floating">Precio</ion-label>
             <ion-input type="number" formControlName="price"></ion-input>
           </ion-item>
+          <ion-item>
+            <ion-label position="floating">Precio Vip</ion-label>
+            <ion-input type="number" formControlName="priceVip"></ion-input>
+          </ion-item>
           <ion-button color="danger" (click)="removeStop(i)">Eliminar</ion-button>
         </div>
       </div>
@@ -78,6 +82,18 @@
         class="validators"
         *ngIf="form.controls.price.errors && form.controls.price.touched">
         <div *ngIf="form.controls.price.errors?.['required']">El precio es requerido</div>
+      </div>
+      <app-custom-input
+        icon="cash"
+        autocomplete="price"
+        [control]="form.controls.priceVip"
+        type="number"
+        label="Precio de viaje VIP">
+      </app-custom-input>
+      <div
+        class="validators"
+        *ngIf="form.controls.priceVip.errors && form.controls.priceVip.touched">
+        <div *ngIf="form.controls.priceVip.errors?.['required']">El precio VIP es requerido</div>
       </div>
 
       <app-custom-input

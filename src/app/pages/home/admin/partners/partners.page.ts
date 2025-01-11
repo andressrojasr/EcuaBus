@@ -86,8 +86,6 @@ export class PartnersPage {
 
     try {
       await this.firebase.deleteDocument(path);
-      let pathImage = await this.firebase.getFilePath(partner.photo)
-      // await this.firebase.deleteFile(pathImage)
       this.utils.showToast({
         message: 'Socio eliminado exitosamente',
         duration: 1500,

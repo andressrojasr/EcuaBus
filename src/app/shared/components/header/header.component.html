@@ -3,7 +3,7 @@
     <ion-title *ngIf="showTitle && user!==null && cooperative!==null ">
       <ion-item lines="none" class="header-item">
         <ion-avatar aria-hidden="true" slot="start">
-          <img alt="Logotipo Cooperativa" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          <img alt="Logotipo Cooperativa" [src]="cooperative.photo" />
         </ion-avatar> 
         <ion-label class="header-label" >Cooperativa {{cooperative.name}} - {{user.rol}}</ion-label>
       </ion-item>

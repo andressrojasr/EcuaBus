@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { orderBy } from 'firebase/firestore';
 import { Frecuency } from 'src/app/models/frecuency.model';
 import { User } from 'src/app/models/user.model';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -16,6 +17,7 @@ export class FrecuenciesPage{
   utils = inject(UtilsService)
   firebase = inject(FirebaseService)
   router = inject(Router)
+  secondaryFirebase = inject(FirebaseSecondaryService)
 
   frecuencies: Frecuency[] = []
   filteredFrecuencies: Frecuency[]=[]
@@ -92,6 +94,8 @@ export class FrecuenciesPage{
         position: 'middle',
         icon: 'checkmark-circle-outline',
       });
+      let pathImage = await this.secondaryFirebase.getFilePath(frecuency.document)
+      await this.secondaryFirebase.deleteFile(pathImage)
     } catch (error) {
       this.utils.showToast({
         message:"Ha ocurrido un error",

@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Cooperative } from 'src/app/models/cooperative.model';
 import { User } from 'src/app/models/user.model';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -18,6 +19,7 @@ export class CooperativePage implements OnInit {
 
   utils = inject(UtilsService)
   firebase = inject(FirebaseService);
+  secondaryFirebase = inject(FirebaseSecondaryService)
 
   form = new FormGroup({
     uid: new FormControl(''),
@@ -64,9 +66,14 @@ export class CooperativePage implements OnInit {
 
       const loading = await this.utils.loading();
       await loading.present();
-
+      
       try {
-        console.log(this.form.value)
+        if (this.form.value.photo !== this.cooperative.photo) {
+          let dataUrl = this.form.value.photo;
+          let imagePath = `ecuabus/${this.user.uidCooperative}/cooperative/${Date.now()}`;
+          let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+          this.form.controls.photo.setValue(imageUrl);
+        }
         await this.firebase.updateDocument(path, this.form.value);
         this.utils.saveInLocalStorage('cooperative', this.form.value)
         this.utils.showToast({
@@ -76,6 +83,7 @@ export class CooperativePage implements OnInit {
           position: 'middle',
           icon: 'checkmark-circle-outline',
         });
+        
       } catch (error) {
         console.log(error);
 

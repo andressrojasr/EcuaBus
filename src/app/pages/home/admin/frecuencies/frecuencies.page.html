@@ -20,10 +20,10 @@
             <ion-item lines="none" class="item">
               <ion-list>
                 <ion-item *ngIf="p.stops.length>0">
-                  <ion-label class="ion-text-wrap">Paradas: <h2 *ngFor="let stop of p.stops">{{stop.name + " - $"+ stop.price}}</h2></ion-label>
+                  <ion-label class="ion-text-wrap">Paradas: <h2 *ngFor="let stop of p.stops">{{stop.name + " - $"+ stop.price +" - VIP $" + stop.priceVip}}</h2></ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap">Costo: ${{p.price}}</ion-label>
+                  <ion-label class="ion-text-wrap">Costo: ${{p.price}} | VIP: ${{p.priceVip}}</ion-label>
                 </ion-item>
                 <ion-item>
                   <ion-label class="ion-text-wrap">Hora de salida: {{p.timeStart}}</ion-label>
@@ -32,7 +32,7 @@
                   <ion-label class="ion-text-wrap">Hora de llegada: {{p.timeEnd}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap">Tiempo aproximado de viaje: {{p.time}}</ion-label>
+                  <ion-label class="ion-text-wrap">Tiempo aproximado de viaje: {{p.time}} horas</ion-label>
                 </ion-item>
                 <ion-item>
                   <ion-label class="ion-text-wrap">Descargar certificado de frecuencia: <ion-button fill="clear" (click)="downloadDocument(p)">

@@ -118,6 +118,11 @@ export class FirebaseService {
     return deleteDoc(doc(getFirestore(),path))
   }
 
+  async deleteCollection(path:string)
+  {
+    return this.deleteCollection(path)
+  }
+
   async getFilePath(url:string)
   {
     return ref(getStorage(),url).fullPath
@@ -164,4 +169,14 @@ export class FirebaseService {
         localStorage.setItem('cooperative', JSON.stringify(cooperative));
       });
   }
+
+  addSubcollectionDocument(collection: string, documentId: string, subcollection: string, idBus: any, seats: any, data: any) {
+    return this.firestore
+      .collection(collection)
+      .doc(documentId)
+      .collection(subcollection)
+      .doc(idBus)
+      .collection(seats)
+      .add(data);
+  }
 }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { orderBy } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -17,6 +18,7 @@ export class TaquillerosPage {
   firebase = inject(FirebaseService)
   router = inject(Router)
   api = inject(AdminapiService)
+  secondaryFirebase = inject(FirebaseSecondaryService)
   taquilleros: User[] = []
   filteredTaquilleros: User[]=[]
   searchTerm: string = '';
@@ -179,8 +181,10 @@ export class TaquillerosPage {
   async deleteTaquillero(taquillero: User) {
     const loading = await this.utils.loading()
     await loading.present()
+    let pathImage = await this.secondaryFirebase.getFilePath(taquillero.photo)
     this.api.deleteUser(taquillero.uid, taquillero.uidCooperative, 'taquilleros').subscribe({
-      next: () => {
+      next: async () => {
+        await this.secondaryFirebase.deleteFile(pathImage)
         this.utils.showToast({
           message: 'Taquillero eliminado exitosamente',
           duration: 1500,

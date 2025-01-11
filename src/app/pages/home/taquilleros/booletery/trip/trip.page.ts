@@ -42,13 +42,15 @@ export class TripPage implements OnInit{
         const path = `cooperatives/${user.uidCooperative}/viajes`;
         this.loading = true;
       
-        const query = [where('idfrec', '==', this.trip.id)];
+        const query = [where('idfrec', '==', this.trip.id),
+                      where('status', '==', 'Activo'),
+                      orderBy('date', 'desc'),
+        ];
       
         this.firebase.getCollectionData(path, query).subscribe({
           next: async (res: any[]) => {
             const busesWithPartners = await Promise.all(
               res.map(async (trip) => {
-                console.log(trip.idcobrador)
                 const driver = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/drivers/${trip.idconductor}`);
                 const collector = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/collectors/${trip.idcobrador}`);
                 const bus = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/buses/${trip.idbus}`);
@@ -74,59 +76,12 @@ export class TripPage implements OnInit{
         });
       }
     
-      async addUpdateBus(trip?: Trip)
+      async addUpdateTrip(trip?: Trip)
       {
         this.router.navigate(['/home/admin/trip/create-trip'], { state: { trip } });
       }
     
-      confirmDeleteBus(trip: Trip) {
-        this.utils.presentAlert({
-          header: 'Eliminar trip',
-          message: '¿Estás seguro de eliminar a este trip?',
-          buttons: [
-            {
-              text: 'Cancelar',
-              role: 'cancel',
-              cssClass: 'secondary',
-            },
-            {
-              text: 'Eliminar',
-              handler: () => this.deleteBus(trip),
-            },
-          ],
-        });
-      }
-    
-      async deleteBus(trip: Trip) {
-        const user: User = this.utils.getFromLocalStorage('user');
-        let path = `cooperatives/${user.uidCooperative}/trips/${trip.id}`;
-    
-        const loading = await this.utils.loading();
-        await loading.present();
-    
-        try {
-          await this.firebase.deleteDocument(path);
-          this.utils.showToast({
-            message: 'Trip eliminado exitosamente',
-            duration: 1500,
-            color: 'success',
-            position: 'middle',
-            icon: 'checkmark-circle-outline',
-          });
-        } catch (error) {
-          this.utils.showToast({
-            message:"Ha ocurrido un error",
-            duration: 2500,
-            color: 'primary',
-            position: 'middle',
-            icon: 'alert-circle-outline',
-          });
-        } finally {
-          loading.dismiss();
-        }
-      }
-    
-      filterBuses() {
+      filterTrips() {
         const searchTerm = this.searchTerm.toLowerCase();
     
         if (searchTerm.trim() === '') {
@@ -134,7 +89,18 @@ export class TripPage implements OnInit{
         } else {
           this.filteredTrips = this.trips.filter(trip => {
             return (
-              trip.id.toLowerCase().includes(searchTerm)
+                trip.id.toLowerCase().includes(searchTerm)||
+                trip.driver.name.toLowerCase().includes(searchTerm)||
+                trip.driver.lastName.toLowerCase().includes(searchTerm)||
+                trip.driver.card.toLowerCase().includes(searchTerm)||
+                trip.collector.name.toLowerCase().includes(searchTerm)||
+                trip.collector.lastName.toLowerCase().includes(searchTerm)||
+                trip.collector.card.toLowerCase().includes(searchTerm)||
+                trip.frecuency.origin.toLowerCase().includes(searchTerm)||
+                trip.frecuency.destiny.toLowerCase().includes(searchTerm)||
+                trip.frecuency.timeStart.toLowerCase().includes(searchTerm)||
+                trip.status.toLowerCase().includes(searchTerm)||
+                trip.date.toLowerCase().includes(searchTerm)
             );
           });
         }

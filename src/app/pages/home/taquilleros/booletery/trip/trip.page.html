@@ -5,68 +5,43 @@
       Frecuencias > Viajes
     </ion-label>
   </ion-item>
-  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterBuses()" placeholder="Buscar Viaje" animated="true"></ion-searchbar>
+  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterTrips()" placeholder="Buscar Viaje" animated="true"></ion-searchbar>
   <ion-list *ngIf="!loading">
     <ion-item-sliding class="product-item" *ngFor="let p of filteredTrips">
       <ion-item>
         <ion-card mode="ios">
           <ion-card-header>
-            <ion-card-title>{{p.id}}</ion-card-title>
-            <ion-card-subtitle>Viaje</ion-card-subtitle>
+            <ion-card-title>{{p.frecuency.origin}} - {{p.frecuency.destiny}} | {{p.frecuency.timeStart}} <ion-chip color="success" *ngIf="p.status === 'Activo'">{{p.status}}</ion-chip> <ion-chip color="danger" *ngIf="p.status === 'Finalizado'">{{p.status}}</ion-chip> <ion-chip color="warning" *ngIf="p.status === 'En curso'">{{p.status}}</ion-chip></ion-card-title>
+            <ion-card-subtitle>Viaje: {{p.id}} | {{p.date.split('T')[0]}}</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
             <ion-item lines="none" class="item">
               <ion-list>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Bus: {{p.bus.plate}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Conductor: {{p.driver.name + " "+ p.driver.lastName + " - "+p.driver.card}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Cobrador: {{p.collector.name + " "+ p.collector.lastName + " - "+p.collector.card}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Número de pisos: {{p.bus.floors}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Origen: {{p.frecuency.origin}}</ion-label>
-                </ion-item>
                 <ion-item *ngIf="p.frecuency.stops.length>0">
                   <ion-label class="ion-text-wrap">Paradas: <h2 *ngFor="let stop of p.frecuency.stops">{{stop.name + " - $"+ stop.price}}</h2></ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap">Destino: {{p.frecuency.destiny}}</ion-label>
+                  <ion-label class="ion-text-wrap">Bus: {{p.bus.plate}}</ion-label>
+                  <ion-label class="ion-text-wrap">Marca: {{p.bus.brand}}</ion-label>
+                  <ion-label class="ion-text-wrap">Modelo: {{p.bus.model}}</ion-label>
+                  <ion-label class="ion-text-wrap">Asientos Normales: {{p.bus.seats}} Disponibles: {{p.seats}}</ion-label>
+                  <ion-label class="ion-text-wrap">Asientos Vip: {{p.bus.seatsVip}} Disponibles: {{p.seatsVip}}</ion-label>
+                  <ion-label class="ion-text-wrap">Número de pisos: {{p.bus.floors}}</ion-label>
                 </ion-item>
                 <ion-item>
-                  <ion-label class="ion-text-wrap">Hora de salida: {{p.frecuency.timeStart}}</ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="ion-text-wrap">Asientos: {{p.bus.seats}} Disponibles: {{p.seats}}</ion-label>
+                  <ion-label class="ion-text-wrap">Conductor: {{p.driver.name + " "+ p.driver.lastName + " - "+p.driver.card}}</ion-label>
+                  <ion-label class="ion-text-wrap">Cobrador: {{p.collector.name + " "+ p.collector.lastName + " - "+p.collector.card}}</ion-label>
                 </ion-item>
                 <ion-item>
                   <ion-label class="ion-text-wrap">Precio: {{p.frecuency.price}}</ion-label>
+                  <ion-label class="ion-text-wrap">Precio Vip: {{p.frecuency.priceVip}}</ion-label>
                 </ion-item>
               </ion-list>
             </ion-item>
           </ion-card-content>
         </ion-card>
       </ion-item>
-
-      <!-- ===== Opciones para cada producto ===== -->
-      <ion-item-options>
-        <!-- Editar -->
-        <ion-item-option (click)="addUpdateBus(p)">
-          <ion-icon class="option-btn" name="create-outline"></ion-icon>
-        </ion-item-option>
-
-        <!-- Eliminar -->
-        <ion-item-option (click)="confirmDeleteBus(p)" color="danger">
-          <ion-icon class="option-btn" name="trash-outline"></ion-icon>
-        </ion-item-option>
-
-      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
@@ -75,11 +50,4 @@
     <ion-icon  name="shield-outline"></ion-icon>
     <h3>No hay viajes disponibles</h3>
   </div>
-
-  <!-- Botón para cargar formulario modal -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addUpdateBus()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

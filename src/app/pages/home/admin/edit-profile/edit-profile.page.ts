@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
+import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -16,6 +17,7 @@ export class EditProfilePage implements OnInit {
   
     utils = inject(UtilsService)
     firebase = inject(FirebaseService);
+    secondaryFirebase = inject(FirebaseSecondaryService)
   
     form= new FormGroup({
       uid: new FormControl(''),
@@ -82,6 +84,12 @@ export class EditProfilePage implements OnInit {
             }
           }
           delete this.form.value.password
+          if (this.form.value.photo !== this.user.photo) {
+            let dataUrl = this.form.value.photo;
+            let imagePath = `ecuabus/${this.user.uidCooperative}/users/${Date.now()}`;
+            let imageUrl = await this.secondaryFirebase.uploadImage(imagePath, dataUrl);
+            this.form.controls.photo.setValue(imageUrl);
+        }
           await this.firebase.updateDocument(path, this.form.value);
           this.utils.saveInLocalStorage('user', this.form.value)
           this.utils.showToast({

@@ -1,3 +1,21 @@
+.bus-table-container .header-row,
+.bus-table-container .data-row {
+  align-items: center;
+  text-align: center;
+}
+
+.bus-table-container .header-cell {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.bus-table-container .data-row ion-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
 ion-item ion-card{
     width: 100%;
 }

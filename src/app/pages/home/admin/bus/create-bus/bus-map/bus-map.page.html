@@ -1,0 +1,29 @@
+<app-header [back]="true"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item lines="none">
+    <ion-label>
+      Buses > Editar Bus > Configurar Bus
+    </ion-label>
+  </ion-item>
+  <div class="d-flex-center">
+      <div *ngFor="let floor of getFloors(); let i = index" class="floor-container">
+    <h2>Piso {{ i + 1 }}</h2>
+    <div class="bus-layout">
+      <div
+        class="seat"
+        *ngFor="let seat of seatsByFloor(floor)"
+        [style.top]="seat.position?.top + 'px'"
+        [style.left]="seat.position?.left + 'px'"
+        (mousedown)="startDragging(seat, $event)"
+        (touchstart)="startDragging(seat, $event)"
+      >
+        {{ seat.category }} {{ seat.number }}
+      </div>
+    </div>
+  </div>
+      <ion-button (click)="saveSeatPositions()">
+        Guardar Configuración
+      </ion-button>
+  </div>
+</ion-content>

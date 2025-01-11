@@ -154,5 +154,10 @@ ion-router-outlet {
 }
 
 ion-footer{
-  margin-top: -15px;
+  margin-top: 100px;
+}
+
+ion-item.sub-item {
+  margin-left: 20px;
+  --background: #f9f9f9;
 }

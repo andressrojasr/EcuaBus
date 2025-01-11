@@ -6,5 +6,4 @@ export interface Partner{
     address:string;
     email:string;
     phone: string;
-    photo: string;
 }
