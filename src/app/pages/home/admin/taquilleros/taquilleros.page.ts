@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { orderBy } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
@@ -41,11 +41,13 @@ export class TaquillerosPage {
 
   async getTaquilleros() {
     const user: User = this.utils.getFromLocalStorage('user');
-    let path = `cooperatives/${user.uidCooperative}/taquilleros`;
+    let path = `users`;
     this.loading = true;
 
     let query = [
       orderBy('__name__', 'asc'),
+      where('rol', '==', 'Taquillero'),
+      where('uidCooperative', '==', user.uidCooperative)
     ]
 
     let sub = this.firebase.getCollectionData(path,query).subscribe({
@@ -99,9 +101,8 @@ export class TaquillerosPage {
   }
 
   async lockTaquillero(taquillero: User) {
-    const user: User = this.utils.getFromLocalStorage('user');
     taquillero.isBlocked = true
-    let path = `cooperatives/${user.uidCooperative}/taquilleros/${taquillero.uid}`;
+    let path = `users/${taquillero.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();
@@ -130,9 +131,8 @@ export class TaquillerosPage {
   }
 
   async unlockTaquillero(taquillero: User) {
-    const user: User = this.utils.getFromLocalStorage('user');
     taquillero.isBlocked = false
-    let path = `cooperatives/${user.uidCooperative}/taquilleros/${taquillero.uid}`;
+    let path = `users/${taquillero.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();

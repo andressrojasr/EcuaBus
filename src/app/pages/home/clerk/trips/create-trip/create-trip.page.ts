@@ -27,6 +27,10 @@ export class CreateTripPage implements OnInit {
     user = {} as User
     title: string;
 
+    bus: Bus;
+    driver: User;
+    collector: User;
+
     form= new FormGroup({
       id: new FormControl(''),
       idbus: new FormControl('', [Validators.required]),
@@ -46,13 +50,13 @@ export class CreateTripPage implements OnInit {
   
     constructor() { }
   
-    ngOnInit() {
+    async ngOnInit() {
       this.trip = history.state.trip
       this.user = this.utils.getFromLocalStorage('user');
-      this.getFrecuencies()
-      this.getBuses();
-      this.getCollectors();
-      this.getDrivers();
+      await this.getFrecuencies()
+      await this.getBuses();
+      await this.getCollectors();
+      await this.getDrivers();
       if (this.trip) {
         this.form.patchValue({
           id: this.trip.id,
@@ -67,8 +71,20 @@ export class CreateTripPage implements OnInit {
           status: this.trip.status,
           seatMap: this.trip.seatMap,
           date: this.trip.date
+          
         });
+        await this.getData()
+        const loading = await this.utils.loading();
+        await loading.present();
+        this.collector = this.collectors.find(
+          (collector) => collector.uid === this.trip.idcobrador
+        );
+        this.driver = this.drivers.find(
+          (driver) => driver.uid === this.trip.idconductor
+        );
+        this.bus = this.buses.find((bus) => bus.id === this.trip.idbus);
         this.title="Actualizar Viaje"
+        loading.dismiss()
       }else{
         this.title="Crear Viaje"
       }
@@ -191,8 +207,12 @@ export class CreateTripPage implements OnInit {
 
   async getDrivers() {
     const user: User = this.utils.getFromLocalStorage('user');
-    const query = [where('isBlocked', '==', false)];
-    let path = `cooperatives/${user.uidCooperative}/drivers`;    
+    const query = [
+      where('isBlocked', '==', false),
+      where('rol', '==', 'Conductor'),
+      where('uidCooperative', '==', user.uidCooperative)
+    ];
+    let path = `users`;    
     let sub = this.firebase.getCollectionData(path,query).subscribe({
       next: (res: any) => {
         this.drivers = res
@@ -219,8 +239,12 @@ export class CreateTripPage implements OnInit {
 
   async getCollectors() {
     const user: User = this.utils.getFromLocalStorage('user');
-    const query = [where('isBlocked', '==', false)];
-    let path = `cooperatives/${user.uidCooperative}/collectors`;    
+    const query = [
+      where('isBlocked', '==', false),
+      where('rol', '==', 'Cobrador'),
+      where('uidCooperative', '==', user.uidCooperative)
+    ];
+    let path = `users`;    
     this.firebase.getCollectionData(path,query).subscribe({
       next: (res: any) => {
         this.collectors = res
@@ -239,5 +263,33 @@ export class CreateTripPage implements OnInit {
   onDateTimeChange(event: any): void {
     const selectedDate = event.detail.value;
     this.form.controls.date.setValue(selectedDate)
+  }
+
+  async getData(){
+    const loading = await this.utils.loading();
+    await loading.present();
+    const path = `users/${this.trip.idconductor}`
+    await this.firebase.getDocument(path).then((user: any) => {
+      this.driver = user
+      loading.dismiss()
+    }).catch(error => { 
+      loading.dismiss()
+    })
+    await loading.present()
+    const pathCollector = `users/${this.trip.idcobrador}`
+    await this.firebase.getDocument(pathCollector).then((user: any) => {
+      this.collector = user
+      loading.dismiss()
+    }).catch(error => { 
+      loading.dismiss()
+    })
+    await loading.present()
+    const pathFrecuency = `cooperatives/${this.user.uidCooperative}/bus/${this.trip.idbus}`
+    await this.firebase.getDocument(pathFrecuency).then((bus: any) => {
+      this.bus = bus
+      loading.dismiss()
+    }).catch(error => { 
+      loading.dismiss()
+    })
   }
 }

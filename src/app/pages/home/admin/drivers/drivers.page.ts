@@ -41,11 +41,13 @@ export class DriversPage {
 
   async getDrivers() {
     const user: User = this.utils.getFromLocalStorage('user');
-    let path = `cooperatives/${user.uidCooperative}/drivers`;
+    let path = `users`;
     this.loading = true;
 
     let query = [
       orderBy('__name__', 'asc'),
+      where('rol', '==', 'Conductor'),
+      where('uidCooperative', '==', user.uidCooperative)
     ]
 
     this.firebase.getCollectionData(path,query).subscribe({
@@ -119,7 +121,7 @@ export class DriversPage {
   async lockDriver(driver: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     driver.isBlocked = true
-    let path = `cooperatives/${user.uidCooperative}/drivers/${driver.uid}`;
+    let path = `users/${driver.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();
@@ -150,7 +152,7 @@ export class DriversPage {
   async UnlockDriver(driver: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     driver.isBlocked = false
-    let path = `cooperatives/${user.uidCooperative}/drivers/${driver.uid}`;
+    let path = `users/${driver.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();

@@ -22,7 +22,7 @@ export class SignUpPage implements OnInit {
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),
     lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
     card: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
-    phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
+    phone: new FormControl('', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     isBlocked: new FormControl(false),

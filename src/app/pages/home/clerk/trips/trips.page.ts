@@ -49,8 +49,8 @@ export class TripsPage{
               const busesWithPartners = await Promise.all(
                 res.map(async (trip) => {
                   console.log(trip.idcobrador)
-                  const driver = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/drivers/${trip.idconductor}`);
-                  const collector = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/collectors/${trip.idcobrador}`);
+                  const driver = await this.firebase.getDocument(`users/${trip.idconductor}`);
+                  const collector = await this.firebase.getDocument(`users/${trip.idcobrador}`);
                   const bus = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/buses/${trip.idbus}`);
                   const frecuency = await this.firebase.getDocument(`cooperatives/${user.uidCooperative}/frecuencies/${trip.idfrec}`);
     

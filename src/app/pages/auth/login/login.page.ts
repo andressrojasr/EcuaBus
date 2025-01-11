@@ -17,10 +17,6 @@ export class LoginPage implements AfterViewInit, OnInit{
   firebase = inject(FirebaseService)
   utils = inject(UtilsService)  
 
-  cooperative: string;
-  rol: string = "Administrador";
-  cooperatives: Cooperative []=[]
-
   form= new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -29,22 +25,8 @@ export class LoginPage implements AfterViewInit, OnInit{
   async submit (){
     const loading = await this.utils.loading()
     await loading.present()
-    if(this.rol !== "Administrador" && this.cooperative == null){
-      this.utils.showToast({
-        message: 'Seleccione una cooperativa',
-        duration: 2500,
-        color: 'danger',
-        position: 'middle',
-        icon: 'alert-circle-outline'
-      })
-      loading.dismiss()
-      return
-    }
     this.firebase.signIn(this.form.value as User).then(res => {
-      console.log(res.user)
-      if( this.rol == "Administrador") this.getUserInfo(res.user.uid);
-      if(this.rol == "Taquillero") this.getTaquilleroInfo(res.user.uid);
-      if(this.rol == "Oficinista") this.getOficinistaInfo(res.user.uid);
+      this.getUserInfo(res.user.uid)
     }).catch(err => {
       this.utils.showToast({
         message:err.message,
@@ -117,123 +99,6 @@ export class LoginPage implements AfterViewInit, OnInit{
     }
   }
 
-  async getTaquilleroInfo(uid: string) {
-    if (this.form.valid) {
-      const loading = await this.utils.loading();
-      await loading.present();
-      let path = `cooperatives/${this.cooperative}/taquilleros/${uid}`;
-      this.firebase.getDocument(path).then((user: any) => {
-        if(!user){
-          this.firebase.signOut();
-          this.form.reset();
-          this.utils.showToast({
-            message: 'Usuario no autorizado para iniciar sesión',
-            duration: 2500,
-            color: 'danger',
-            position: 'middle',
-            icon: 'alert-circle-outline'
-          })
-          return
-        }
-        this.utils.saveInLocalStorage('user', user);
-        this.getCooperativeInfo(user.uidCooperative)
-        if(user.rol==="Administrador") this.utils.routerLink('home/admin/bus');
-        else if(user.rol==="Taquillero") this.utils.routerLink('home/taquilleros/booletery');
-        else if(user.rol==="Oficinista") this.utils.routerLink('home/clerk/trips');
-        else {
-          this.utils.removeFromLocalStorage('cooperative')
-          this.utils.removeFromLocalStorage('user')
-          this.firebase.signOut();
-          this.form.reset();
-          this.utils.showToast({
-            message: 'Usuario no autorizado para iniciar sesión',
-            duration: 2500,
-            color: 'danger',
-            position: 'middle',
-            icon: 'alert-circle-outline'
-          })
-          return
-        }
-        this.form.reset();
-        this.utils.showToast({
-          message: `Te damos la bienvenida ${user.name}`,
-          duration: 1500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'person-circle-outline'
-        })
-      }).catch(error => { 
-        this.utils.showToast({
-          message: error.message,
-          duration: 2500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle-outline'
-        })
-      }).finally(() => {
-        loading.dismiss();
-      })
-    }
-  }
-
-  async getOficinistaInfo(uid: string) {
-    if (this.form.valid) {
-      const loading = await this.utils.loading();
-      await loading.present();
-      let path = `cooperatives/${this.cooperative}/clerks/${uid}`;
-      this.firebase.getDocument(path).then((user: any) => {
-        if(!user){
-          this.firebase.signOut();
-          this.form.reset();
-          this.utils.showToast({
-            message: 'Usuario no autorizado para iniciar sesión',
-            duration: 2500,
-            color: 'danger',
-            position: 'middle',
-            icon: 'alert-circle-outline'
-          })
-          return
-        }
-        this.utils.saveInLocalStorage('user', user);
-        this.getCooperativeInfo(user.uidCooperative)
-        if(user.rol==="Administrador") this.utils.routerLink('home/admin/bus');
-        else if(user.rol==="Taquillero") this.utils.routerLink('home/taquilleros/booletery');
-        else if(user.rol==="Oficinista") this.utils.routerLink('home/clerk/trips');
-        else {
-          this.utils.removeFromLocalStorage('cooperative')
-          this.utils.removeFromLocalStorage('user')
-          this.firebase.signOut();
-          this.form.reset();
-          this.utils.showToast({
-            message: 'Usuario no autorizado para iniciar sesión',
-            duration: 2500,
-            color: 'danger',
-            position: 'middle',
-            icon: 'alert-circle-outline'
-          })
-          return
-        }
-        this.form.reset();
-        this.utils.showToast({
-          message: `Te damos la bienvenida ${user.name}`,
-          duration: 1500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'person-circle-outline'
-        })
-      }).catch(error => { 
-        this.utils.showToast({
-          message: error.message,
-          duration: 2500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle-outline'
-        })
-      }).finally(() => {
-        loading.dismiss();
-      })
-    }
-  }
 
   async getCooperativeInfo(uid: string) {
     if (this.form.valid) {
@@ -271,27 +136,8 @@ export class LoginPage implements AfterViewInit, OnInit{
   animation.play(); // Iniciar la animación
   }
 
-  async getCooperatives() {
-    let path = `cooperatives`;
-
-    let sub = this.firebase.getCollectionData(path).subscribe({
-      next: (res: any) => {
-        this.cooperatives = res
-      }
-    })
-  }
-
-  selectOnChange(event){
-    this.cooperative=event.detail.value
-  }
-
-  selectOnChangeRol(event){
-    this.rol=event.detail.value
-  }
-
   ngOnInit(): void {
       this.playAnimation();
-      this.getCooperatives()
   }
 
   ngAfterViewInit(){
