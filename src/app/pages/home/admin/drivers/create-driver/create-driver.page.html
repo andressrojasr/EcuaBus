@@ -92,8 +92,8 @@
         class="validators"
         *ngIf="form.controls.phone.errors && form.controls.phone.touched">
         <div *ngIf="form.controls.phone.errors?.['required']">El número de telefono del conductor es requerida</div>
-        <div *ngIf="form.controls.card.errors?.['minlength']">Ingrese 13 caracteres</div>
-        <div *ngIf="form.controls.card.errors?.['maxlength']">Ingrese 13 caracteres</div>
+        <div *ngIf="form.controls.phone.errors?.['minlength']">Ingrese 13 caracteres</div>
+        <div *ngIf="form.controls.phone.errors?.['maxlength']">Ingrese 13 caracteres</div>
       </div>
 
       <app-custom-input

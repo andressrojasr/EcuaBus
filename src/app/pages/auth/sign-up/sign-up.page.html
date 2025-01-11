@@ -66,7 +66,7 @@
             <app-custom-input 
               icon="phone-portrait" 
               type="text" 
-              label="Celular" 
+              label="Celular con código de pais" 
               autocomplete="phone" 
               [control]="userForm.controls.phone">
             </app-custom-input>
@@ -74,8 +74,8 @@
               class="validators"
               *ngIf="userForm.controls.phone.errors && userForm.controls.phone.touched">
               <div *ngIf="userForm.controls.phone.errors?.['required']">El celular es requerido</div>
-              <div *ngIf="userForm.controls.phone.errors?.['minlength']">El celular debe tener 10 caracteres</div>
-              <div *ngIf="userForm.controls.phone.errors?.['maxlength']">El celular debe tener 10 caracteres</div>
+              <div *ngIf="userForm.controls.phone.errors?.['minlength']">El celular debe tener 13 caracteres</div>
+              <div *ngIf="userForm.controls.phone.errors?.['maxlength']">El celular debe tener 13 caracteres</div>
             </div>
             <!-- Input de correo -->
             <app-custom-input 

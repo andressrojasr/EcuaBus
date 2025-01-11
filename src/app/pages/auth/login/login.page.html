@@ -47,14 +47,6 @@
               <div *ngIf="form.controls.password.errors?.['required']">La contraseña es requerida</div>
               <div *ngIf="form.controls.password.errors?.['minlength']">Ingrese al menos 6 caracteres</div>
             </div>
-            <ion-select fill="outline" class="select" label="Rol" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeRol($event)">
-              <ion-select-option value="Administrador">Administrador</ion-select-option>
-              <ion-select-option value="Taquillero">Taquillero</ion-select-option>
-              <ion-select-option value="Oficinista">Oficinista</ion-select-option>
-            </ion-select>
-            <ion-select fill="outline" class="select" label="Cooperativa" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)" *ngIf="rol !== 'Administrador'">
-              <ion-select-option *ngFor="let p of cooperatives" [value]="p.uid">{{p.name}}</ion-select-option>
-            </ion-select>
             <ion-label class="forget-password" routerLink="reset-password">¿Olvidaste tu contraseña?</ion-label>
             <ion-button 
               type="submit"

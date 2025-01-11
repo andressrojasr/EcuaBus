@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { orderBy } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
@@ -41,11 +41,13 @@ export class ClerksPage {
 
   async getClerks() {
     const user: User = this.utils.getFromLocalStorage('user');
-    let path = `cooperatives/${user.uidCooperative}/clerks`;
+    let path = `users`;
     this.loading = true;
 
     let query = [
       orderBy('__name__', 'asc'),
+      where('rol', '==', 'Oficinista'),
+      where('uidCooperative', '==', user.uidCooperative)
     ]
 
     let sub = this.firebase.getCollectionData(path,query).subscribe({
@@ -101,7 +103,7 @@ export class ClerksPage {
   async lockClerk(clerk: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     clerk.isBlocked = true
-    let path = `cooperatives/${user.uidCooperative}/clerks/${clerk.uid}`;
+    let path = `users/${clerk.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();
@@ -132,7 +134,7 @@ export class ClerksPage {
   async unlockClerk(clerk: User) {
     const user: User = this.utils.getFromLocalStorage('user');
     clerk.isBlocked = false
-    let path = `cooperatives/${user.uidCooperative}/clerks/${clerk.uid}`;
+    let path = `users/${clerk.uid}`;
 
     const loading = await this.utils.loading();
     await loading.present();

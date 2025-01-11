@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { orderBy } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { User } from 'src/app/models/user.model';
 import { AdminapiService } from 'src/app/services/adminapi.service';
 import { FirebaseSecondaryService } from 'src/app/services/firebase-secondary.service';
@@ -41,11 +41,13 @@ export class CollectorPage{
   
     async getCollectors() {
       const user: User = this.utils.getFromLocalStorage('user');
-      let path = `cooperatives/${user.uidCooperative}/collectors`;
+      let path = `users`;
       this.loading = true;
   
       let query = [
         orderBy('__name__', 'asc'),
+        where('rol', '==', 'Cobrador'),
+        where('uidCooperative', '==', user.uidCooperative)
       ]
   
       let sub = this.firebase.getCollectionData(path,query).subscribe({
@@ -101,7 +103,7 @@ export class CollectorPage{
     async lockCollector(collector: User) {
       const user: User = this.utils.getFromLocalStorage('user');
       collector.isBlocked = true
-      let path = `cooperatives/${user.uidCooperative}/collectors/${collector.uid}`;
+      let path = `users/${collector.uid}`;
   
       const loading = await this.utils.loading();
       await loading.present();
@@ -132,7 +134,7 @@ export class CollectorPage{
     async unlockCollector(collector: User) {
       const user: User = this.utils.getFromLocalStorage('user');
       collector.isBlocked = false
-      let path = `cooperatives/${user.uidCooperative}/collectors/${collector.uid}`;
+      let path = `users/${collector.uid}`;
   
       const loading = await this.utils.loading();
       await loading.present();

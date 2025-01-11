@@ -17,16 +17,16 @@
         <ion-select-option *ngFor="let p of frecuencies" [value]="p">{{p.id}} | {{p.origin}} - {{p.destiny}} | {{p.timeStart}}</ion-select-option>
       </ion-select>
 
-      <ion-select fill="outline" class="select" label="Bus" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeBus($event)">
+      <ion-select fill="outline" class="select" label="Bus" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeBus($event)"  [value]="bus ? bus : null">
         <ion-select-option *ngFor="let p of buses" [value]="p">{{p.plate}} | Asientos: {{p.seats}} - Asientos Vip: {{p.seatsVip}}</ion-select-option>
       </ion-select>
 
-      <ion-select fill="outline" class="select" label="Conductor" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeDriver($event)">
+      <ion-select fill="outline" class="select" label="Conductor" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeDriver($event)" [value]="driver ? driver : null">
         <ion-select-option *ngFor="let p of drivers" [value]="p">{{p.card}} | {{p.name}} - {{p.lastName}}</ion-select-option>
       </ion-select>
 
-      <ion-select fill="outline" class="select" label="Cobrador" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeCollector($event)">
-        <ion-select-option *ngFor="let p of collectors" [value]="p">{{p.card}} | {{p.name}} - {{p.lastName}}</ion-select-option>
+      <ion-select fill="outline" class="select" label="Cobrador" interface="modal"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeCollector($event)" [value]="collector ? collector : null">
+        <ion-select-option *ngFor="let p of collectors"  [value]="p">{{p.card}} | {{p.name}} - {{p.lastName}}</ion-select-option>
       </ion-select>
 
 
@@ -48,7 +48,7 @@
         </ng-template>
       </ion-modal>
 
-      <ion-select *ngIf="trip" fill="outline" class="select" label="Estado" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeStatus($event)">
+      <ion-select *ngIf="trip" fill="outline" class="select" label="Estado" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeStatus($event)" [value]="trip.status">
         <ion-select-option value="Activo">Activo</ion-select-option>
         <ion-select-option value="En curso">En Curso</ion-select-option>
         <ion-select-option value="Finalizado">Finalizado</ion-select-option>
